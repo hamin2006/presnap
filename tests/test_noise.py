@@ -1,8 +1,8 @@
 import numpy as np
 import pytest
 
-pytest.importorskip("torch")
-from presnap.noise import drift, swap, velocities  # noqa: E402
+
+from presnap.augment import drift, swap, velocities  # noqa: E402
 
 
 def test_velocity_from_linear_motion():

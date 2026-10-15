@@ -70,8 +70,10 @@ def main():
         gp = p["game_play"]
         cap = cv2.VideoCapture(str(V / f"train/{gp}_All29.mp4"))
         t = trk.filter(pl.col("game_play") == gp)
-        los = (t.filter((pl.col("step") == 0) & pl.col("position").is_in(["C", "G", "T"]))["x_position"].mean()
-               + t.filter((pl.col("step") == 0) & pl.col("position").is_in(["DE", "DT", "NT", "DL"]))["x_position"].mean()) / 2
+        s0 = t.filter(pl.col("step") == 0)
+        ol = s0.filter(pl.col("position").is_in(["C", "G", "T", "OG", "OT"]))["x_position"].mean()
+        dl = s0.filter(pl.col("position").is_in(["DE", "DT", "NT", "DL"]))["x_position"].mean()
+        los = (ol + dl) / 2 if ol is not None and dl is not None else (ol or dl or s0["x_position"].median())
         H, orient = None, None
         for s in STEPS:
             img = frame(cap, round(((p["snap"] - p["start"]).total_seconds() + s / 10) * FPS))

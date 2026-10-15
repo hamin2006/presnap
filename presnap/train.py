@@ -16,7 +16,7 @@ import torch
 import torch.nn.functional as Fn
 from sklearn.metrics import roc_auc_score
 
-from presnap import baselines, features, io, seq
+from presnap import augment, baselines, features, io, seq
 from presnap.model import CoverageModel
 from presnap.shell import KEY
 
@@ -32,21 +32,27 @@ def load(source, max_def, t_min, t_max):
     return dict(np.load(p, allow_pickle=True))
 
 
+AUG = {"sigma": 0.0, "rng": np.random.default_rng(0)}  # set by --aug-noise
+
+
 def batches(D, idx, bs, train):
     if train:
         idx = np.random.permutation(idx)
     for i in range(0, len(idx), bs):
         b = idx[i:i + bs]
-        X = torch.from_numpy(D["X"][b]).to(DEV)
+        Xn, Mn = D["X"][b], D["M"][b]
+        if AUG["sigma"] > 0:  # smoothing is part of the pipeline whenever we train for video
+            Xn, Mn = augment.augment(Xn, Mn, AUG["rng"], AUG["sigma"]) if train else (augment.smooth(Xn, Mn), Mn)
+        X = torch.from_numpy(np.ascontiguousarray(Xn)).to(DEV)
         if train:  # mirror the field left/right
             flip = torch.rand(len(b), device=DEV) < 0.5
             X[flip, ..., 1] *= -1
             X[flip, ..., 3] *= -1
-        yield b, X, torch.from_numpy(D["M"][b]).to(DEV), torch.from_numpy(D["S"][b]).to(DEV)
+        yield b, X, torch.from_numpy(np.ascontiguousarray(Mn)).to(DEV), torch.from_numpy(D["S"][b]).to(DEV)
 
 
 def loss_fn(out, D, b, smooth):
-    present = torch.from_numpy(D["M"][b].any(-1)).to(DEV)  # frames with tracking (before the throw / after line-set)
+    present = torch.from_numpy(D["M"][b].any(-1)).to(DEV)  # frames with tracking (uses the uncorrupted mask)
     T = present.shape[1]
     total = 0.0
     for h, key in TARGETS.items():
@@ -174,7 +180,9 @@ def main():
     ap.add_argument("--init", default=None)
     ap.add_argument("--tag", default="main")
     ap.add_argument("--no-gbm", action="store_true")
+    ap.add_argument("--aug-noise", type=float, default=0.0, help="max drift sigma (yd) for noise-augmented training")
     a = ap.parse_args()
+    AUG["sigma"] = a.aug_noise
     checkpoints = [-20, -10, -5, 0, 10, 20] if a.source == "statsbomb" else [0, 5, 10, 15, 20, "throw"]
 
     D = load(a.source, a.max_def, a.t_min, a.t_max)
