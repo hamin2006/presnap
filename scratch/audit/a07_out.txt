@@ -1,0 +1,20 @@
+scratch/audit/a07_misc.py:30: DeprecationWarning: `cut` is deprecated; use `bin_intervals` instead
+  print(R.with_columns(b=pl.col("on_cam").cut([0.5, 0.8, 0.95, 0.999])).group_by("b").agg(pl.len(), pl.col("still").median()).sort("b"))
+[{'week': 1, 'plays': 819, 'games': 16, 'c3': 0.331, 'c1': 0.219, 'man': 0.275}, {'week': 2, 'plays': 850, 'games': 16, 'c3': 0.342, 'c1': 0.212, 'man': 0.258}, {'week': 3, 'plays': 904, 'games': 16, 'c3': 0.294, 'c1': 0.251, 'man': 0.324}, {'week': 4, 'plays': 779, 'games': 16, 'c3': 0.334, 'c1': 0.186, 'man': 0.252}, {'week': 5, 'plays': 742, 'games': 14, 'c3': 0.325, 'c1': 0.228, 'man': 0.295}, {'week': 6, 'plays': 793, 'games': 15, 'c3': 0.31, 'c1': 0.198, 'man': 0.25}, {'week': 7, 'plays': 693, 'games': 13, 'c3': 0.32, 'c1': 0.222, 'man': 0.283}, {'week': 8, 'plays': 827, 'games': 16, 'c3': 0.295, 'c1': 0.26, 'man': 0.308}, {'week': 9, 'plays': 711, 'games': 14, 'c3': 0.304, 'c1': 0.226, 'man': 0.278}, {'week': 10, 'plays': 721, 'games': 14, 'c3': 0.315, 'c1': 0.252, 'man': 0.308}, {'week': 11, 'plays': 707, 'games': 14, 'c3': 0.347, 'c1': 0.204, 'man': 0.27}, {'week': 12, 'plays': 854, 'games': 16, 'c3': 0.303, 'c1': 0.263, 'man': 0.321}, {'week': 13, 'plays': 666, 'games': 13, 'c3': 0.302, 'c1': 0.245, 'man': 0.305}, {'week': 14, 'plays': 796, 'games': 15, 'c3': 0.323, 'c1': 0.215, 'man': 0.279}, {'week': 15, 'plays': 791, 'games': 16, 'c3': 0.3, 'c1': 0.217, 'man': 0.265}, {'week': 16, 'plays': 896, 'games': 16, 'c3': 0.301, 'c1': 0.213, 'man': 0.294}, {'week': 17, 'plays': 809, 'games': 16, 'c3': 0.33, 'c1': 0.236, 'man': 0.29}, {'week': 18, 'plays': 750, 'games': 16, 'c3': 0.351, 'c1': 0.2, 'man': 0.26}]
+games per team in bdb26: [{'len': 17, 'count': 32}]
+plays per defensive team (2023 tracking): [{'min': 355, 'med': 446.5, 'max': 520}]
+SB x range -14.01 112.24 y range -7.56 59.04
+step keys [{'keys': 'ngs_x,ngs_y,time_since_snap,timestamp,x,y', 'count': 30238}, {'keys': 'calibration_fault,ngs_x,ngs_y,time_since_snap,timestamp,x,y', 'count': 801}] steps with null x 30909
+share of consecutive identical positions by on_camera_ratio bucket:
+shape: (5, 3)
+┌───────────────┬───────┬──────────┐
+│ b             ┆ len   ┆ still    │
+│ ---           ┆ ---   ┆ ---      │
+│ enum          ┆ u32   ┆ f64      │
+╞═══════════════╪═══════╪══════════╡
+│ (-inf, 0.5]   ┆ 55    ┆ 0.0      │
+│ (0.5, 0.8]    ┆ 1362  ┆ 0.122652 │
+│ (0.8, 0.95]   ┆ 3498  ┆ 0.170695 │
+│ (0.95, 0.999] ┆ 2664  ┆ 0.178859 │
+│ (0.999, inf]  ┆ 23460 ┆ 0.135394 │
+└───────────────┴───────┴──────────┘

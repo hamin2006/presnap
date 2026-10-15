@@ -1,0 +1,112 @@
+plays 16050 pre-snap plays (tss_min<0) 16037 plays starting after snap 13
+def tracks per play [{'len': 3, 'count': 1}, {'len': 10, 'count': 26}, {'len': 11, 'count': 15992}, {'len': 22, 'count': 15}]
+pos code mismatch: SB position_code vs team side [{'is_def': False, 'pos': 'K', 'len': 2}, {'is_def': False, 'pos': 'P', 'len': 8}, {'is_def': False, 'pos': 'LS', 'len': 11}, {'is_def': False, 'pos': 'DL', 'len': 15}, {'is_def': False, 'pos': 'DB', 'len': 23}, {'is_def': False, 'pos': 'LB', 'len': 110}, {'is_def': False, 'pos': 'QB', 'len': 16048}, {'is_def': False, 'pos': 'RB', 'len': 18017}, {'is_def': False, 'pos': 'TE', 'len': 19676}, {'is_def': False, 'pos': 'WR', 'len': 41872}, {'is_def': False, 'pos': 'OL', 'len': 80742}, {'is_def': True, 'pos': 'TE', 'len': 5}, {'is_def': True, 'pos': 'RB', 'len': 10}, {'is_def': True, 'pos': 'WR', 'len': 10}, {'is_def': True, 'pos': 'OL', 'len': 34}, {'is_def': True, 'pos': 'LB', 'len': 47986}, {'is_def': True, 'pos': 'DL', 'len': 49007}, {'is_def': True, 'pos': 'DB', 'len': 79453}]
+
+== visibility by role (tracks on plays with pre-snap data)
+shape: (10, 9)
+┌───────────┬────────┬────────────┬─────────────┬──────────────┬───────────────┬───────────┬─────────┬──────────┐
+│ role      ┆ n      ┆ on_cam_med ┆ on_cam_lt90 ┆ pre_frac_med ┆ pre_frac_mean ┆ pre1_ge90 ┆ at_snap ┆ zero_pre │
+│ ---       ┆ ---    ┆ ---        ┆ ---         ┆ ---          ┆ ---           ┆ ---       ┆ ---     ┆ ---      │
+│ str       ┆ u32    ┆ f64        ┆ f64         ┆ f64          ┆ f64           ┆ f64       ┆ f64     ┆ f64      │
+╞═══════════╪════════╪════════════╪═════════════╪══════════════╪═══════════════╪═══════════╪═════════╪══════════╡
+│ DB-CB     ┆ 30493  ┆ 1.0        ┆ 0.061       ┆ 1.003788     ┆ 1.006         ┆ 1.0       ┆ 0.986   ┆ 0.0      │
+│ DB-other  ┆ 8523   ┆ 1.0        ┆ 0.043       ┆ 1.003745     ┆ 1.005         ┆ 1.0       ┆ 0.986   ┆ 0.0      │
+│ DB-safety ┆ 29909  ┆ 1.0        ┆ 0.038       ┆ 1.003788     ┆ 1.005         ┆ 1.0       ┆ 0.985   ┆ 0.0      │
+│ DL        ┆ 42465  ┆ 1.0        ┆ 0.08        ┆ 1.003846     ┆ 1.006         ┆ 1.0       ┆ 0.986   ┆ 0.0      │
+│ LB        ┆ 41671  ┆ 1.0        ┆ 0.057       ┆ 1.003802     ┆ 1.006         ┆ 1.0       ┆ 0.986   ┆ 0.0      │
+│ OFF       ┆ 153127 ┆ 1.0        ┆ 0.096       ┆ 1.003817     ┆ 1.006         ┆ 1.0       ┆ 0.986   ┆ 0.0      │
+│ OL        ┆ 29     ┆ 1.0        ┆ 0.034       ┆ 1.0          ┆ 1.005         ┆ 1.0       ┆ 0.966   ┆ 0.0      │
+│ RB        ┆ 10     ┆ 1.0        ┆ 0.0         ┆ 1.0          ┆ 1.001         ┆ 1.0       ┆ 1.0     ┆ 0.0      │
+│ TE        ┆ 5      ┆ 0.852      ┆ 0.6         ┆ 1.0          ┆ 0.805         ┆ 0.8       ┆ 0.8     ┆ 0.2      │
+│ WR        ┆ 10     ┆ 1.0        ┆ 0.1         ┆ 1.0          ┆ 0.904         ┆ 0.9       ┆ 0.9     ┆ 0.1      │
+└───────────┴────────┴────────────┴─────────────┴──────────────┴───────────────┴───────────┴─────────┴──────────┘
+safety pre_frac deciles [{'0.05': 1.0, '0.1': 1.0, '0.25': 1.0, '0.5': 1.003787878787879, '0.75': 1.009009009009009}]
+safety on_camera_ratio quantiles [{'0.01': 0.772, '0.05': 0.928, '0.1': 0.993, '0.25': 1.0, '0.5': 1.0}]
+on_camera_ratio < 0.9 share by role and SB season
+shape: (7, 6)
+┌───────────┬───────┬───────┬───────────┬───────┬───────┐
+│ season    ┆ DL    ┆ LB    ┆ DB-safety ┆ OFF   ┆ DB-CB │
+│ ---       ┆ ---   ┆ ---   ┆ ---       ┆ ---   ┆ ---   │
+│ str       ┆ f64   ┆ f64   ┆ f64       ┆ f64   ┆ f64   │
+╞═══════════╪═══════╪═══════╪═══════════╪═══════╪═══════╡
+│ 2016/2017 ┆ 0.085 ┆ 0.061 ┆ 0.05      ┆ 0.105 ┆ 0.079 │
+│ 2017/2018 ┆ 0.068 ┆ 0.048 ┆ 0.035     ┆ 0.084 ┆ 0.054 │
+│ 2018/2019 ┆ 0.062 ┆ 0.04  ┆ 0.035     ┆ 0.08  ┆ 0.052 │
+│ 2019/2020 ┆ 0.041 ┆ 0.034 ┆ 0.029     ┆ 0.057 ┆ 0.04  │
+│ 2020/2021 ┆ 0.132 ┆ 0.081 ┆ 0.05      ┆ 0.14  ┆ 0.076 │
+│ 2021/2022 ┆ 0.08  ┆ 0.058 ┆ 0.031     ┆ 0.09  ┆ 0.051 │
+│ 2022/2023 ┆ 0.092 ┆ 0.064 ┆ 0.034     ┆ 0.106 ┆ 0.066 │
+└───────────┴───────┴───────┴───────────┴───────┴───────┘
+plays: min safety on_cam >=0.9: 12649 of 13587 ; min DB on_cam >=0.9: 11722 of 13884
+safeties per play [{'n_saf': 1, 'count': 2462}, {'n_saf': 2, 'count': 6769}, {'n_saf': 3, 'count': 3577}, {'n_saf': 4, 'count': 750}, {'n_saf': 5, 'count': 20}, {'n_saf': 8, 'count': 8}, {'n_saf': 14, 'count': 1}]
+
+== pre-snap duration (s) by season (tss_min)
+shape: (7, 6)
+┌───────────┬────────┬───────┬───────┬───────┬───────────┐
+│ season    ┆ med    ┆ p10   ┆ p90   ┆ lt1s  ┆ calib_bad │
+│ ---       ┆ ---    ┆ ---   ┆ ---   ┆ ---   ┆ ---       │
+│ str       ┆ f64    ┆ f64   ┆ f64   ┆ f64   ┆ f64       │
+╞═══════════╪════════╪═══════╪═══════╪═══════╪═══════════╡
+│ 2016/2017 ┆ 3.775  ┆ 0.935 ┆ 8.549 ┆ 0.107 ┆ 0.0       │
+│ 2017/2018 ┆ 3.882  ┆ 0.791 ┆ 8.596 ┆ 0.129 ┆ 0.0       │
+│ 2018/2019 ┆ 3.8565 ┆ 0.903 ┆ 8.579 ┆ 0.115 ┆ 0.0       │
+│ 2019/2020 ┆ 4.166  ┆ 0.979 ┆ 9.032 ┆ 0.101 ┆ 0.0       │
+│ 2020/2021 ┆ 3.802  ┆ 0.845 ┆ 8.068 ┆ 0.124 ┆ 0.0       │
+│ 2021/2022 ┆ 2.756  ┆ 0.576 ┆ 4.276 ┆ 0.192 ┆ 0.0       │
+│ 2022/2023 ┆ 3.169  ┆ 0.674 ┆ 4.462 ┆ 0.157 ┆ 0.0       │
+└───────────┴────────┴───────┴───────┴───────┴───────────┘
+
+== join to plays CSV and nflverse
+plays CSV rows 18116 null game id 1 null play id 31 seasons [{'season': '2017/2018', 'count': 2900}, {'season': '2018/2019', 'count': 3027}, {'season': '2019/2020', 'count': 2805}, {'season': '2020/2021', 'count': 3142}, {'season': '2021/2022', 'count': 3209}, {'season': '2022/2023', 'count': 3033}]
+tracking plays that join plays CSV 13640 of 16050
+tracking plays with nflverse coverage label: 6822 dropbacks: 6822 by season [{'season': '2018/2019', 'len': 1177}, {'season': '2019/2020', 'len': 1191}, {'season': '2020/2021', 'len': 1548}, {'season': '2021/2022', 'len': 1502}, {'season': '2022/2023', 'len': 1404}]
+labeled dropbacks with >=1 s pre-snap: 5882 | all roster-identified safeties on_camera_ratio>=0.9 & step at snap: 5215 | ALL DBs on_camera_ratio>=0.9: 4749
+good-safety labeled dropbacks by defense (Brady's team on D vs opponents): [{'brady_def': False, 'len': 2595}, {'brady_def': True, 'len': 2620}]
+good-safety label dist [{'cov': 'COVER_1', 'count': 1516}, {'cov': 'COVER_3', 'count': 1416}, {'cov': 'COVER_2', 'count': 745}, {'cov': 'COVER_4', 'count': 716}, {'cov': 'COVER_6', 'count': 319}, {'cov': 'COVER_0', 'count': 301}, {'cov': '2_MAN', 'count': 183}, {'cov': 'PREVENT', 'count': 19}]
+
+== play_defensive_back_depths vs coverage shell
+DB count in depth array [{'n_db': 1, 'count': 10}, {'n_db': 2, 'count': 15}, {'n_db': 3, 'count': 33}, {'n_db': 4, 'count': 1090}, {'n_db': 5, 'count': 4045}, {'n_db': 6, 'count': 1287}, {'n_db': 7, 'count': 250}, {'n_db': 8, 'count': 7}]
+shape: (4, 5)
+┌────────┬─────┬──────┬──────┬──────┐
+│ shell  ┆ 0   ┆ 1    ┆ 2    ┆ 3    │
+│ ---    ┆ --- ┆ ---  ┆ ---  ┆ ---  │
+│ str    ┆ u32 ┆ u32  ┆ u32  ┆ u32  │
+╞════════╪═════╪══════╪══════╪══════╡
+│ other  ┆ 1   ┆ 1    ┆ null ┆ 31   │
+│ single ┆ 458 ┆ 2515 ┆ 653  ┆ 65   │
+│ two    ┆ 185 ┆ 985  ┆ 1349 ┆ 118  │
+│ zero   ┆ 341 ┆ 29   ┆ 6    ┆ null │
+└────────┴─────┴──────┴──────┴──────┘
+depth>=8yd rule: n=6704 shell accuracy=67.0%  (majority-class baseline 55.1%)
+depth>=10yd rule: n=6704 shell accuracy=64.5%  (majority-class baseline 55.1%)
+depth>=12yd rule: n=6704 shell accuracy=51.1%  (majority-class baseline 55.1%)
+
+== play_blitz vs nflverse/FTN
+play_blitz values on dropbacks [{'play_blitz': 'True', 'count': 1065}, {'play_blitz': 'NA', 'count': 4089}, {'play_blitz': 'TRUE', 'count': 1389}, {'play_blitz': None, 'count': 3679}]
+play_blitz null by season [{'season': '2016/2017', 'null': 1.0, 'n': 1417}, {'season': '2017/2018', 'null': 0.0, 'n': 1331}, {'season': '2018/2019', 'null': 0.0, 'n': 1258}, {'season': '2019/2020', 'null': 0.0, 'n': 1305}, {'season': '2020/2021', 'null': 0.056, 'n': 1678}, {'season': '2021/2022', 'null': 0.635, 'n': 1711}, {'season': '2022/2023', 'null': 0.71, 'n': 1522}]
+raw play_blitz values by season (dropbacks)
+shape: (14, 3)
+┌───────────┬────────────┬──────┐
+│ season    ┆ play_blitz ┆ len  │
+│ ---       ┆ ---        ┆ ---  │
+│ str       ┆ str        ┆ u32  │
+╞═══════════╪════════════╪══════╡
+│ 2016/2017 ┆ null       ┆ 1417 │
+│ 2017/2018 ┆ NA         ┆ 1064 │
+│ 2017/2018 ┆ TRUE       ┆ 267  │
+│ 2018/2019 ┆ NA         ┆ 998  │
+│ 2018/2019 ┆ TRUE       ┆ 260  │
+│ 2019/2020 ┆ NA         ┆ 1001 │
+│ 2019/2020 ┆ TRUE       ┆ 304  │
+│ 2020/2021 ┆ null       ┆ 94   │
+│ 2020/2021 ┆ NA         ┆ 1026 │
+│ 2020/2021 ┆ TRUE       ┆ 558  │
+│ 2021/2022 ┆ null       ┆ 1087 │
+│ 2021/2022 ┆ True       ┆ 624  │
+│ 2022/2023 ┆ null       ┆ 1081 │
+│ 2022/2023 ┆ True       ┆ 441  │
+└───────────┴────────────┴──────┘
+2017-2020 SB seasons SB blitz rate 24.9 % | vs participation rushers>=5: n 5520 agree 86.0 % [{'sb': False, 'r5': False, 'len': 3649}, {'sb': False, 'r5': True, 'len': 482}, {'sb': True, 'r5': False, 'len': 289}, {'sb': True, 'r5': True, 'len': 1100}]
+2021-2022 SB seasons SB blitz rate 32.9 % | vs participation rushers>=5: n 3128 agree 90.6 % [{'sb': False, 'r5': False, 'len': 2028}, {'sb': False, 'r5': True, 'len': 56}, {'sb': True, 'r5': False, 'len': 238}, {'sb': True, 'r5': True, 'len': 806}]
+SB play_blitz vs FTN n_blitzers>0 (2022): n 1512 agree 82.0 % [{'sb': False, 'fb': False, 'len': 971}, {'sb': False, 'fb': True, 'len': 100}, {'sb': True, 'fb': False, 'len': 172}, {'sb': True, 'fb': True, 'len': 269}]
+same 2022 plays: participation(NGS) rushers>=5 vs FTN n_blitzers>0 agree 85.8 % n 1506

@@ -1,0 +1,20 @@
+[project]
+name = "presnap"
+version = "0.1.0"
+description = "Pre-snap coverage, shell, rotation and blitz reads from NFL tracking data"
+requires-python = ">=3.12"
+dependencies = [
+    "kaggle>=2.2.4",
+    "nflreadpy>=0.1.5",
+    "numpy>=2.5.4",
+    "polars>=2.0.0",
+    "pyarrow>=26.0.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]

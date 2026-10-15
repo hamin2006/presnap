@@ -1,0 +1,358 @@
+input rows 4880579 plays 14108 games 272
+supp rows 18009 shape: (2, 2)
+┌────────┬───────┐
+│ season ┆ len   │
+│ ---    ┆ ---   │
+│ i64    ┆ u32   │
+╞════════╪═══════╡
+│ 2023   ┆ 14108 │
+│ 2024   ┆ 3901  │
+└────────┴───────┘
+supp dup keys 0
+input plays missing from supp 0
+supp 2023 plays missing from input 0
+
+== roles / sides
+shape: (4, 3)
+┌─────────────┬────────────────────┬───────┐
+│ player_side ┆ player_role        ┆ len   │
+│ ---         ┆ ---                ┆ ---   │
+│ str         ┆ str                ┆ u32   │
+╞═════════════╪════════════════════╪═══════╡
+│ Offense     ┆ Passer             ┆ 14105 │
+│ Offense     ┆ Targeted Receiver  ┆ 14108 │
+│ Offense     ┆ Other Route Runner ┆ 50644 │
+│ Defense     ┆ Defensive Coverage ┆ 94293 │
+└─────────────┴────────────────────┴───────┘
+positions by role
+shape: (34, 3)
+┌────────────────────┬─────────────────┬───────┐
+│ player_role        ┆ player_position ┆ len   │
+│ ---                ┆ ---             ┆ ---   │
+│ str                ┆ str             ┆ u32   │
+╞════════════════════╪═════════════════╪═══════╡
+│ Defensive Coverage ┆ CB              ┆ 37500 │
+│ Defensive Coverage ┆ FS              ┆ 17018 │
+│ Defensive Coverage ┆ SS              ┆ 13764 │
+│ Defensive Coverage ┆ ILB             ┆ 10403 │
+│ Defensive Coverage ┆ OLB             ┆ 7297  │
+│ Defensive Coverage ┆ MLB             ┆ 7064  │
+│ Defensive Coverage ┆ DE              ┆ 596   │
+│ Defensive Coverage ┆ S               ┆ 481   │
+│ Defensive Coverage ┆ DT              ┆ 115   │
+│ Defensive Coverage ┆ NT              ┆ 45    │
+│ Defensive Coverage ┆ FB              ┆ 9     │
+│ Defensive Coverage ┆ LB              ┆ 1     │
+│ Other Route Runner ┆ WR              ┆ 29391 │
+│ Other Route Runner ┆ TE              ┆ 11607 │
+│ Other Route Runner ┆ RB              ┆ 8900  │
+│ Other Route Runner ┆ FB              ┆ 572   │
+│ Other Route Runner ┆ QB              ┆ 129   │
+│ Other Route Runner ┆ CB              ┆ 40    │
+│ Other Route Runner ┆ DT              ┆ 1     │
+│ Other Route Runner ┆ P               ┆ 1     │
+│ Other Route Runner ┆ MLB             ┆ 1     │
+│ Other Route Runner ┆ ILB             ┆ 1     │
+│ Other Route Runner ┆ K               ┆ 1     │
+│ Passer             ┆ QB              ┆ 14102 │
+│ Passer             ┆ RB              ┆ 3     │
+│ Targeted Receiver  ┆ WR              ┆ 8611  │
+│ Targeted Receiver  ┆ TE              ┆ 3249  │
+│ Targeted Receiver  ┆ RB              ┆ 2111  │
+│ Targeted Receiver  ┆ FB              ┆ 77    │
+│ Targeted Receiver  ┆ QB              ┆ 35    │
+│ Targeted Receiver  ┆ CB              ┆ 21    │
+│ Targeted Receiver  ┆ T               ┆ 2     │
+│ Targeted Receiver  ┆ ILB             ┆ 1     │
+│ Targeted Receiver  ┆ DT              ┆ 1     │
+└────────────────────┴─────────────────┴───────┘
+n [{'n': 1, 'len': 1}, {'n': 5, 'len': 1}, {'n': 6, 'len': 2}, {'n': 7, 'len': 24}, {'n': 8, 'len': 64}, {'n': 9, 'len': 263}, {'n': 10, 'len': 797}, {'n': 11, 'len': 1741}, {'n': 12, 'len': 3355}, {'n': 13, 'len': 7369}, {'n': 14, 'len': 472}, {'n': 15, 'len': 11}, {'n': 16, 'len': 2}, {'n': 17, 'len': 6}]
+n_cov [{'n_cov': 0, 'len': 1}, {'n_cov': 3, 'len': 14}, {'n_cov': 4, 'len': 151}, {'n_cov': 5, 'len': 826}, {'n_cov': 6, 'len': 2950}, {'n_cov': 7, 'len': 9547}, {'n_cov': 8, 'len': 597}, {'n_cov': 9, 'len': 14}, {'n_cov': 10, 'len': 2}, {'n_cov': 11, 'len': 6}]
+n_def [{'n_def': 0, 'len': 1}, {'n_def': 3, 'len': 14}, {'n_def': 4, 'len': 151}, {'n_def': 5, 'len': 826}, {'n_def': 6, 'len': 2950}, {'n_def': 7, 'len': 9547}, {'n_def': 8, 'len': 597}, {'n_def': 9, 'len': 14}, {'n_def': 10, 'len': 2}, {'n_def': 11, 'len': 6}]
+n_route [{'n_route': 1, 'len': 2}, {'n_route': 2, 'len': 118}, {'n_route': 3, 'len': 859}, {'n_route': 4, 'len': 3708}, {'n_route': 5, 'len': 9421}]
+n_pass [{'n_pass': 0, 'len': 3}, {'n_pass': 1, 'len': 14105}]
+n_tgt [{'n_tgt': 1, 'len': 14108}]
+defense side but not coverage role: 0
+frame-1 rows per play == distinct nfl_id per play: True
+
+== frames per play (input = snap..throw)
+min frame_id values [{'nmin': 1, 'count': 14108}]
+all players have all frames: True
+shape: (1, 7)
+┌─────┬──────┬──────┬──────┬──────┬──────┬───────┐
+│ p0  ┆ p5   ┆ p25  ┆ p50  ┆ p75  ┆ p95  ┆ p100  │
+│ --- ┆ ---  ┆ ---  ┆ ---  ┆ ---  ┆ ---  ┆ ---   │
+│ f64 ┆ f64  ┆ f64  ┆ f64  ┆ f64  ┆ f64  ┆ f64   │
+╞═════╪══════╪══════╪══════╪══════╪══════╪═══════╡
+│ 8.0 ┆ 17.0 ┆ 22.0 ┆ 26.0 ┆ 32.0 ┆ 45.0 ┆ 123.0 │
+└─────┴──────┴──────┴──────┴──────┴──────┴───────┘
+mean input frames 28.133966543804934 -> seconds 2.8133966543804934
+shape: (1, 5)
+┌─────┬─────┬──────┬──────┬──────┐
+│ p0  ┆ p5  ┆ p50  ┆ p95  ┆ p100 │
+│ --- ┆ --- ┆ ---  ┆ ---  ┆ ---  │
+│ f64 ┆ f64 ┆ f64  ┆ f64  ┆ f64  │
+╞═════╪═════╪══════╪══════╪══════╡
+│ 5.0 ┆ 6.0 ┆ 10.0 ┆ 23.0 ┆ 94.0 │
+└─────┴─────┴──────┴──────┴──────┘
+plays with >=50 input frames 465 >=80 21
+
+== kinematics at frames 1..15 by role (median s, a; share with s<0.3)
+shape: (60, 6)
+┌────────────────────┬──────────┬───────┬──────────┬───────┬──────────┐
+│ player_role        ┆ frame_id ┆ s_med ┆ s_mean   ┆ a_med ┆ still    │
+│ ---                ┆ ---      ┆ ---   ┆ ---      ┆ ---   ┆ ---      │
+│ str                ┆ i64      ┆ f64   ┆ f64      ┆ f64   ┆ f64      │
+╞════════════════════╪══════════╪═══════╪══════════╪═══════╪══════════╡
+│ Defensive Coverage ┆ 1        ┆ 0.28  ┆ 0.567956 ┆ 0.34  ┆ 0.511576 │
+│ Defensive Coverage ┆ 2        ┆ 0.31  ┆ 0.597881 ┆ 0.38  ┆ 0.491076 │
+│ Defensive Coverage ┆ 3        ┆ 0.35  ┆ 0.643784 ┆ 0.45  ┆ 0.456131 │
+│ Defensive Coverage ┆ 4        ┆ 0.43  ┆ 0.711288 ┆ 0.58  ┆ 0.408185 │
+│ Defensive Coverage ┆ 5        ┆ 0.54  ┆ 0.806391 ┆ 0.76  ┆ 0.347905 │
+│ Defensive Coverage ┆ 6        ┆ 0.69  ┆ 0.933673 ┆ 1.0   ┆ 0.277804 │
+│ Defensive Coverage ┆ 7        ┆ 0.87  ┆ 1.095397 ┆ 1.27  ┆ 0.205052 │
+│ Defensive Coverage ┆ 8        ┆ 1.09  ┆ 1.290278 ┆ 1.54  ┆ 0.136171 │
+│ Defensive Coverage ┆ 9        ┆ 1.34  ┆ 1.511669 ┆ 1.75  ┆ 0.080738 │
+│ Defensive Coverage ┆ 10       ┆ 1.6   ┆ 1.748018 ┆ 1.89  ┆ 0.045663 │
+│ Defensive Coverage ┆ 11       ┆ 1.87  ┆ 1.987155 ┆ 1.96  ┆ 0.027687 │
+│ Defensive Coverage ┆ 12       ┆ 2.13  ┆ 2.219847 ┆ 1.97  ┆ 0.017816 │
+│ Defensive Coverage ┆ 13       ┆ 2.38  ┆ 2.438839 ┆ 1.94  ┆ 0.012789 │
+│ Defensive Coverage ┆ 14       ┆ 2.6   ┆ 2.639965 ┆ 1.88  ┆ 0.009155 │
+│ Defensive Coverage ┆ 15       ┆ 2.81  ┆ 2.821671 ┆ 1.82  ┆ 0.00759  │
+│ Other Route Runner ┆ 1        ┆ 0.01  ┆ 0.307902 ┆ 0.04  ┆ 0.892208 │
+│ Other Route Runner ┆ 2        ┆ 0.05  ┆ 0.385664 ┆ 0.48  ┆ 0.791999 │
+│ Other Route Runner ┆ 3        ┆ 0.2   ┆ 0.543996 ┆ 1.27  ┆ 0.586624 │
+│ Other Route Runner ┆ 4        ┆ 0.52  ┆ 0.806128 ┆ 2.16  ┆ 0.334038 │
+│ Other Route Runner ┆ 5        ┆ 0.94  ┆ 1.16894  ┆ 3.02  ┆ 0.157057 │
+│ Other Route Runner ┆ 6        ┆ 1.45  ┆ 1.608782 ┆ 3.65  ┆ 0.074204 │
+│ Other Route Runner ┆ 7        ┆ 2.0   ┆ 2.091733 ┆ 4.04  ┆ 0.036569 │
+│ Other Route Runner ┆ 8        ┆ 2.56  ┆ 2.586347 ┆ 4.16  ┆ 0.017929 │
+│ Other Route Runner ┆ 9        ┆ 3.11  ┆ 3.067845 ┆ 4.09  ┆ 0.008532 │
+│ Other Route Runner ┆ 10       ┆ 3.62  ┆ 3.519563 ┆ 3.87  ┆ 0.004604 │
+│ Other Route Runner ┆ 11       ┆ 4.08  ┆ 3.930043 ┆ 3.58  ┆ 0.002887 │
+│ Other Route Runner ┆ 12       ┆ 4.49  ┆ 4.292979 ┆ 3.24  ┆ 0.002414 │
+│ Other Route Runner ┆ 13       ┆ 4.83  ┆ 4.604894 ┆ 2.89  ┆ 0.001842 │
+│ Other Route Runner ┆ 14       ┆ 5.12  ┆ 4.866937 ┆ 2.57  ┆ 0.001608 │
+│ Other Route Runner ┆ 15       ┆ 5.37  ┆ 5.082037 ┆ 2.3   ┆ 0.001276 │
+│ Passer             ┆ 1        ┆ 0.02  ┆ 0.085823 ┆ 0.03  ┆ 0.923361 │
+│ Passer             ┆ 2        ┆ 0.04  ┆ 0.12551  ┆ 0.08  ┆ 0.856859 │
+│ Passer             ┆ 3        ┆ 0.08  ┆ 0.203704 ┆ 0.4   ┆ 0.756115 │
+│ Passer             ┆ 4        ┆ 0.2   ┆ 0.340915 ┆ 0.97  ┆ 0.597022 │
+│ Passer             ┆ 5        ┆ 0.42  ┆ 0.548556 ┆ 1.63  ┆ 0.390429 │
+│ Passer             ┆ 6        ┆ 0.72  ┆ 0.819082 ┆ 2.17  ┆ 0.213258 │
+│ Passer             ┆ 7        ┆ 1.05  ┆ 1.131531 ┆ 2.53  ┆ 0.11067  │
+│ Passer             ┆ 8        ┆ 1.39  ┆ 1.45872  ┆ 2.63  ┆ 0.058703 │
+│ Passer             ┆ 9        ┆ 1.7   ┆ 1.772859 ┆ 2.55  ┆ 0.030211 │
+│ Passer             ┆ 10       ┆ 1.97  ┆ 2.051927 ┆ 2.3   ┆ 0.016534 │
+│ Passer             ┆ 11       ┆ 2.19  ┆ 2.279479 ┆ 1.96  ┆ 0.009589 │
+│ Passer             ┆ 12       ┆ 2.35  ┆ 2.448024 ┆ 1.6   ┆ 0.006756 │
+│ Passer             ┆ 13       ┆ 2.46  ┆ 2.553347 ┆ 1.27  ┆ 0.0047   │
+│ Passer             ┆ 14       ┆ 2.5   ┆ 2.596517 ┆ 1.075 ┆ 0.00364  │
+│ Passer             ┆ 15       ┆ 2.49  ┆ 2.5828   ┆ 1.1   ┆ 0.003371 │
+│ Targeted Receiver  ┆ 1        ┆ 0.01  ┆ 0.321944 ┆ 0.07  ┆ 0.875177 │
+│ Targeted Receiver  ┆ 2        ┆ 0.07  ┆ 0.403965 ┆ 0.56  ┆ 0.769989 │
+│ Targeted Receiver  ┆ 3        ┆ 0.24  ┆ 0.570203 ┆ 1.365 ┆ 0.55387  │
+│ Targeted Receiver  ┆ 4        ┆ 0.56  ┆ 0.840117 ┆ 2.24  ┆ 0.306705 │
+│ Targeted Receiver  ┆ 5        ┆ 1.0   ┆ 1.208948 ┆ 3.07  ┆ 0.140842 │
+│ Targeted Receiver  ┆ 6        ┆ 1.51  ┆ 1.65187  ┆ 3.69  ┆ 0.062801 │
+│ Targeted Receiver  ┆ 7        ┆ 2.05  ┆ 2.134098 ┆ 4.03  ┆ 0.031117 │
+│ Targeted Receiver  ┆ 8        ┆ 2.61  ┆ 2.624474 ┆ 4.14  ┆ 0.015736 │
+│ Targeted Receiver  ┆ 9        ┆ 3.14  ┆ 3.099632 ┆ 4.03  ┆ 0.007516 │
+│ Targeted Receiver  ┆ 10       ┆ 3.63  ┆ 3.542504 ┆ 3.8   ┆ 0.003973 │
+│ Targeted Receiver  ┆ 11       ┆ 4.08  ┆ 3.941753 ┆ 3.51  ┆ 0.003054 │
+│ Targeted Receiver  ┆ 12       ┆ 4.47  ┆ 4.290944 ┆ 3.17  ┆ 0.002417 │
+│ Targeted Receiver  ┆ 13       ┆ 4.78  ┆ 4.58795  ┆ 2.84  ┆ 0.002136 │
+│ Targeted Receiver  ┆ 14       ┆ 5.04  ┆ 4.832654 ┆ 2.55  ┆ 0.001712 │
+│ Targeted Receiver  ┆ 15       ┆ 5.26  ┆ 5.027743 ┆ 2.33  ┆ 0.001076 │
+└────────────────────┴──────────┴───────┴──────────┴───────┴──────────┘
+passer |dx| frame1->2 median 0.010000000000005116  frame1->11 median 0.9299999999999997
+
+== play_direction and coordinates
+shape: (2, 4)
+┌────────────────┬───────┬───────────┬───────────┐
+│ play_direction ┆ len   ┆ x_mean    ┆ los       │
+│ ---            ┆ ---   ┆ ---       ┆ ---       │
+│ str            ┆ u32   ┆ f64       ┆ f64       │
+╞════════════════╪═══════╪═══════════╪═══════════╡
+│ left           ┆ 85832 ┆ 61.438109 ┆ 63.740528 │
+│ right          ┆ 87318 ┆ 59.471831 ┆ 57.312192 │
+└────────────────┴───────┴───────────┴───────────┘
+x range 0.41 119.86 y range 0.62 52.88
+offense x relative to absolute_yardline_number (pos = downfield) by direction:
+shape: (2, 4)
+┌────────────────┬───────┬───────┬───────┐
+│ play_direction ┆ rel   ┆ p5    ┆ p95   │
+│ ---            ┆ ---   ┆ ---   ┆ ---   │
+│ str            ┆ f64   ┆ f64   ┆ f64   │
+╞════════════════╪═══════╪═══════╪═══════╡
+│ left           ┆ -1.77 ┆ -5.64 ┆ -0.58 │
+│ right          ┆ -1.87 ┆ -5.75 ┆ -0.7  │
+└────────────────┴───────┴───────┴───────┘
+defense depth relative to absolute_yardline_number by direction:
+shape: (2, 4)
+┌────────────────┬──────┬──────┬───────┐
+│ play_direction ┆ rel  ┆ p5   ┆ p95   │
+│ ---            ┆ ---  ┆ ---  ┆ ---   │
+│ str            ┆ f64  ┆ f64  ┆ f64   │
+╞════════════════╪══════╪══════╪═══════╡
+│ right          ┆ 5.01 ┆ 0.71 ┆ 14.65 │
+│ left           ┆ 5.14 ┆ 0.82 ┆ 14.84 │
+└────────────────┴──────┴──────┴───────┘
+output players per play [{'nfl_id': 1, 'len': 1142}, {'nfl_id': 2, 'len': 2822}, {'nfl_id': 3, 'len': 4658}, {'nfl_id': 4, 'len': 3118}, {'nfl_id': 5, 'len': 1589}, {'nfl_id': 6, 'len': 612}, {'nfl_id': 7, 'len': 141}, {'nfl_id': 8, 'len': 25}, {'nfl_id': 9, 'len': 1}]
+player_to_predict rows by role at f1
+shape: (5, 3)
+┌────────────────────┬───────────────────┬───────┐
+│ player_role        ┆ player_to_predict ┆ len   │
+│ ---                ┆ ---               ┆ ---   │
+│ str                ┆ bool              ┆ u32   │
+╞════════════════════╪═══════════════════╪═══════╡
+│ Defensive Coverage ┆ true              ┆ 31937 │
+│ Defensive Coverage ┆ false             ┆ 62356 │
+│ Other Route Runner ┆ false             ┆ 50644 │
+│ Passer             ┆ false             ┆ 14105 │
+│ Targeted Receiver  ┆ true              ┆ 14108 │
+└────────────────────┴───────────────────┴───────┘
+
+== nulls in input
+shape: (1, 23)
+┌─────────┬─────────┬─────────┬────────┬─────────┬─────────┬─────────┬─────────┬─────────┬─────────┬─────────┬────────┬────────┬────────┬─────┬─────┬─────┬─────┬─────┬─────┬────────┬────────┬────────┐
+│ game_id ┆ play_id ┆ player_ ┆ nfl_id ┆ frame_i ┆ play_di ┆ absolut ┆ player_ ┆ player_ ┆ player_ ┆ player_ ┆ player ┆ player ┆ player ┆ x   ┆ y   ┆ s   ┆ a   ┆ dir ┆ o   ┆ num_fr ┆ ball_l ┆ ball_l │
+│ ---     ┆ ---     ┆ to_pred ┆ ---    ┆ d       ┆ rection ┆ e_yardl ┆ name    ┆ height  ┆ weight  ┆ birth_d ┆ _posit ┆ _side  ┆ _role  ┆ --- ┆ --- ┆ --- ┆ --- ┆ --- ┆ --- ┆ ames_o ┆ and_x  ┆ and_y  │
+│ u32     ┆ u32     ┆ ict     ┆ u32    ┆ ---     ┆ ---     ┆ ine_num ┆ ---     ┆ ---     ┆ ---     ┆ ate     ┆ ion    ┆ ---    ┆ ---    ┆ u32 ┆ u32 ┆ u32 ┆ u32 ┆ u32 ┆ u32 ┆ utput  ┆ ---    ┆ ---    │
+│         ┆         ┆ ---     ┆        ┆ u32     ┆ u32     ┆ ber     ┆ u32     ┆ u32     ┆ u32     ┆ ---     ┆ ---    ┆ u32    ┆ u32    ┆     ┆     ┆     ┆     ┆     ┆     ┆ ---    ┆ u32    ┆ u32    │
+│         ┆         ┆ u32     ┆        ┆         ┆         ┆ ---     ┆         ┆         ┆         ┆ u32     ┆ u32    ┆        ┆        ┆     ┆     ┆     ┆     ┆     ┆     ┆ u32    ┆        ┆        │
+│         ┆         ┆         ┆        ┆         ┆         ┆ u32     ┆         ┆         ┆         ┆         ┆        ┆        ┆        ┆     ┆     ┆     ┆     ┆     ┆     ┆        ┆        ┆        │
+╞═════════╪═════════╪═════════╪════════╪═════════╪═════════╪═════════╪═════════╪═════════╪═════════╪═════════╪════════╪════════╪════════╪═════╪═════╪═════╪═════╪═════╪═════╪════════╪════════╪════════╡
+│ 0       ┆ 0       ┆ 0       ┆ 0      ┆ 0       ┆ 0       ┆ 0       ┆ 0       ┆ 0       ┆ 0       ┆ 0       ┆ 0      ┆ 0      ┆ 0      ┆ 0   ┆ 0   ┆ 0   ┆ 0   ┆ 0   ┆ 0   ┆ 0      ┆ 0      ┆ 0      │
+└─────────┴─────────┴─────────┴────────┴─────────┴─────────┴─────────┴─────────┴─────────┴─────────┴─────────┴────────┴────────┴────────┴─────┴─────┴─────┴─────┴─────┴─────┴────────┴────────┴────────┘
+nulls in supp (non-zero)
+{'yardline_side': 251, 'route_of_targeted_receiver': 4, 'play_action': 1, 'dropback_type': 1, 'dropback_distance': 1, 'pass_location_type': 20, 'team_coverage_man_zone': 5, 'team_coverage_type': 5, 'penalty_yards': 17549}
+
+== supplementary labels (2023 plays with tracking)
+n 14108
+shape: (9, 3)
+┌────────────────────┬──────┬───────────┐
+│ team_coverage_type ┆ len  ┆ pct       │
+│ ---                ┆ ---  ┆ ---       │
+│ str                ┆ u32  ┆ f64       │
+╞════════════════════╪══════╪═══════════╡
+│ COVER_3_ZONE       ┆ 4482 ┆ 31.769209 │
+│ COVER_1_MAN        ┆ 3175 ┆ 22.504962 │
+│ COVER_4_ZONE       ┆ 2346 ┆ 16.628863 │
+│ COVER_2_ZONE       ┆ 1837 ┆ 13.020981 │
+│ COVER_6_ZONE       ┆ 1388 ┆ 9.83839   │
+│ COVER_0_MAN        ┆ 601  ┆ 4.259994  │
+│ COVER_2_MAN        ┆ 237  ┆ 1.679898  │
+│ PREVENT            ┆ 39   ┆ 0.276439  │
+│ null               ┆ 3    ┆ 0.021265  │
+└────────────────────┴──────┴───────────┘
+shape: (3, 2)
+┌────────────────────────┬───────┐
+│ team_coverage_man_zone ┆ len   │
+│ ---                    ┆ ---   │
+│ str                    ┆ u32   │
+╞════════════════════════╪═══════╡
+│ ZONE_COVERAGE          ┆ 10092 │
+│ MAN_COVERAGE           ┆ 4013  │
+│ null                   ┆ 3     │
+└────────────────────────┴───────┘
+supp all-season coverage type
+shape: (9, 3)
+┌────────────────────┬──────┬──────┐
+│ team_coverage_type ┆ 2024 ┆ 2023 │
+│ ---                ┆ ---  ┆ ---  │
+│ str                ┆ u32  ┆ u32  │
+╞════════════════════╪══════╪══════╡
+│ null               ┆ 2    ┆ 3    │
+│ COVER_0_MAN        ┆ 180  ┆ 601  │
+│ COVER_1_MAN        ┆ 933  ┆ 3175 │
+│ COVER_2_MAN        ┆ 95   ┆ 237  │
+│ COVER_2_ZONE       ┆ 681  ┆ 1837 │
+│ COVER_3_ZONE       ┆ 1182 ┆ 4482 │
+│ COVER_4_ZONE       ┆ 514  ┆ 2346 │
+│ COVER_6_ZONE       ┆ 305  ┆ 1388 │
+│ PREVENT            ┆ 9    ┆ 39   │
+└────────────────────┴──────┴──────┘
+shape: (3, 2)
+┌─────────────┬──────┐
+│ pass_result ┆ len  │
+│ ---         ┆ ---  │
+│ str         ┆ u32  │
+╞═════════════╪══════╡
+│ IN          ┆ 338  │
+│ I           ┆ 4032 │
+│ C           ┆ 9738 │
+└─────────────┴──────┘
+nullified by penalty shape: (2, 2)
+┌───────────────────────────┬───────┐
+│ play_nullified_by_penalty ┆ len   │
+│ ---                       ┆ ---   │
+│ str                       ┆ u32   │
+╞═══════════════════════════╪═══════╡
+│ Y                         ┆ 1     │
+│ N                         ┆ 14107 │
+└───────────────────────────┴───────┘
+shape: (16, 12)
+┌──────┬──────┬──────┬──────────────┬──────────────┬─────────────┬──────────────┬─────────────┬─────────────┬─────────┬──────────────┬──────┐
+│ down ┆ dist ┆ tot  ┆ COVER_4_ZONE ┆ COVER_3_ZONE ┆ COVER_1_MAN ┆ COVER_2_ZONE ┆ COVER_0_MAN ┆ COVER_2_MAN ┆ PREVENT ┆ COVER_6_ZONE ┆ null │
+│ ---  ┆ ---  ┆ ---  ┆ ---          ┆ ---          ┆ ---         ┆ ---          ┆ ---         ┆ ---         ┆ ---     ┆ ---          ┆ ---  │
+│ i64  ┆ str  ┆ u32  ┆ f64          ┆ f64          ┆ f64         ┆ f64          ┆ f64         ┆ f64         ┆ f64     ┆ f64          ┆ f64  │
+╞══════╪══════╪══════╪══════════════╪══════════════╪═════════════╪══════════════╪═════════════╪═════════════╪═════════╪══════════════╪══════╡
+│ 1    ┆ 1-3  ┆ 57   ┆ 1.8          ┆ null         ┆ 21.1        ┆ null         ┆ 77.2        ┆ null        ┆ null    ┆ null         ┆ null │
+│ 1    ┆ 11+  ┆ 245  ┆ 17.1         ┆ 35.5         ┆ 11.0        ┆ 19.2         ┆ 2.0         ┆ 1.6         ┆ null    ┆ 13.5         ┆ null │
+│ 1    ┆ 4-6  ┆ 83   ┆ 9.6          ┆ 22.9         ┆ 32.5        ┆ 4.8          ┆ 25.3        ┆ null        ┆ null    ┆ 4.8          ┆ null │
+│ 1    ┆ 7-10 ┆ 4778 ┆ 18.8         ┆ 38.3         ┆ 16.3        ┆ 13.1         ┆ 1.9         ┆ 0.8         ┆ 0.4     ┆ 10.4         ┆ 0.0  │
+│ 2    ┆ 1-3  ┆ 473  ┆ 14.6         ┆ 31.5         ┆ 20.7        ┆ 10.6         ┆ 11.2        ┆ 1.7         ┆ 0.2     ┆ 9.5          ┆ null │
+│ 2    ┆ 11+  ┆ 909  ┆ 25.3         ┆ 29.5         ┆ 11.6        ┆ 16.3         ┆ 1.0         ┆ 0.6         ┆ 0.1     ┆ 15.7         ┆ null │
+│ 2    ┆ 4-6  ┆ 959  ┆ 17.4         ┆ 33.3         ┆ 23.4        ┆ 11.6         ┆ 5.6         ┆ 0.8         ┆ null    ┆ 7.9          ┆ null │
+│ 2    ┆ 7-10 ┆ 2354 ┆ 19.3         ┆ 31.1         ┆ 20.6        ┆ 12.8         ┆ 2.3         ┆ 1.3         ┆ 0.3     ┆ 12.4         ┆ null │
+│ 3    ┆ 1-3  ┆ 766  ┆ 6.3          ┆ 25.5         ┆ 41.1        ┆ 10.8         ┆ 10.3        ┆ 1.8         ┆ 0.3     ┆ 3.9          ┆ null │
+│ 3    ┆ 11+  ┆ 678  ┆ 16.4         ┆ 33.5         ┆ 10.8        ┆ 19.9         ┆ 3.4         ┆ 3.8         ┆ 0.3     ┆ 11.9         ┆ null │
+│ 3    ┆ 4-6  ┆ 1133 ┆ 9.3          ┆ 23.2         ┆ 40.2        ┆ 11.3         ┆ 5.7         ┆ 3.1         ┆ 0.1     ┆ 7.1          ┆ null │
+│ 3    ┆ 7-10 ┆ 1303 ┆ 13.9         ┆ 24.3         ┆ 33.5        ┆ 12.6         ┆ 4.1         ┆ 4.1         ┆ 0.2     ┆ 7.2          ┆ null │
+│ 4    ┆ 1-3  ┆ 184  ┆ 4.3          ┆ 19.0         ┆ 43.5        ┆ 9.8          ┆ 19.6        ┆ 1.6         ┆ null    ┆ 2.2          ┆ null │
+│ 4    ┆ 11+  ┆ 34   ┆ 26.5         ┆ 17.6         ┆ 8.8         ┆ 20.6         ┆ 8.8         ┆ null        ┆ 8.8     ┆ 5.9          ┆ 2.9  │
+│ 4    ┆ 4-6  ┆ 91   ┆ 7.7          ┆ 13.2         ┆ 48.4        ┆ 8.8          ┆ 7.7         ┆ 5.5         ┆ null    ┆ 8.8          ┆ null │
+│ 4    ┆ 7-10 ┆ 61   ┆ 11.5         ┆ 39.3         ┆ 21.3        ┆ 11.5         ┆ 6.6         ┆ 6.6         ┆ 1.6     ┆ 1.6          ┆ null │
+└──────┴──────┴──────┴──────────────┴──────────────┴─────────────┴──────────────┴─────────────┴─────────────┴─────────┴──────────────┴──────┘
+defenders_in_the_box dist [{'defenders_in_the_box': 1, 'count': 5}, {'defenders_in_the_box': 2, 'count': 17}, {'defenders_in_the_box': 3, 'count': 111}, {'defenders_in_the_box': 4, 'count': 723}, {'defenders_in_the_box': 5, 'count': 2703}, {'defenders_in_the_box': 6, 'count': 7031}, {'defenders_in_the_box': 7, 'count': 2763}, {'defenders_in_the_box': 8, 'count': 677}, {'defenders_in_the_box': 9, 'count': 51}, {'defenders_in_the_box': 10, 'count': 17}, {'defenders_in_the_box': 11, 'count': 10}]
+
+== does n_cov imply rushers? compare 11-n_cov with participation number_of_pass_rushers and FTN n_pass_rushers
+joined to participation 14104 / 14108 ; to FTN 14104
+rushers exact match 11-n_cov: 88.0 %  within 1: 98.3 %
+shape: (10, 11)
+┌──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┐
+│ impl ┆ 0    ┆ 1    ┆ 2    ┆ 3    ┆ 4    ┆ 5    ┆ 6    ┆ 7    ┆ 8    ┆ 44   │
+│ ---  ┆ ---  ┆ ---  ┆ ---  ┆ ---  ┆ ---  ┆ ---  ┆ ---  ┆ ---  ┆ ---  ┆ ---  │
+│ u32  ┆ u32  ┆ u32  ┆ u32  ┆ u32  ┆ u32  ┆ u32  ┆ u32  ┆ u32  ┆ u32  ┆ u32  │
+╞══════╪══════╪══════╪══════╪══════╪══════╪══════╪══════╪══════╪══════╪══════╡
+│ 0    ┆ 6    ┆ null ┆ null ┆ null ┆ null ┆ null ┆ null ┆ null ┆ null ┆ null │
+│ 1    ┆ null ┆ 1    ┆ 1    ┆ null ┆ null ┆ null ┆ null ┆ null ┆ null ┆ null │
+│ 2    ┆ null ┆ null ┆ 11   ┆ 2    ┆ 1    ┆ null ┆ null ┆ null ┆ null ┆ null │
+│ 3    ┆ 1    ┆ null ┆ 3    ┆ 459  ┆ 126  ┆ 8    ┆ null ┆ null ┆ null ┆ null │
+│ 4    ┆ 32   ┆ null ┆ 4    ┆ 92   ┆ 9141 ┆ 257  ┆ 15   ┆ 1    ┆ null ┆ 1    │
+│ 5    ┆ 5    ┆ 2    ┆ null ┆ 16   ┆ 595  ┆ 2206 ┆ 121  ┆ 4    ┆ 1    ┆ null │
+│ 6    ┆ 2    ┆ null ┆ null ┆ 3    ┆ 91   ┆ 187  ┆ 520  ┆ 22   ┆ 1    ┆ null │
+│ 7    ┆ null ┆ null ┆ null ┆ null ┆ 20   ┆ 20   ┆ 41   ┆ 68   ┆ 2    ┆ null │
+│ 8    ┆ null ┆ null ┆ null ┆ null ┆ 2    ┆ 1    ┆ 1    ┆ 5    ┆ 5    ┆ null │
+│ 11   ┆ null ┆ null ┆ null ┆ null ┆ 1    ┆ null ┆ null ┆ null ┆ null ┆ null │
+└──────┴──────┴──────┴──────┴──────┴──────┴──────┴──────┴──────┴──────┴──────┘
+ftn_rush exact match 11-n_cov: 88.1 %  within 1: 98.4 %
+shape: (10, 11)
+┌──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┐
+│ impl ┆ 0    ┆ 1    ┆ 2    ┆ 3    ┆ 4    ┆ 5    ┆ 6    ┆ 7    ┆ 8    ┆ 44   │
+│ ---  ┆ ---  ┆ ---  ┆ ---  ┆ ---  ┆ ---  ┆ ---  ┆ ---  ┆ ---  ┆ ---  ┆ ---  │
+│ u32  ┆ u32  ┆ u32  ┆ u32  ┆ u32  ┆ u32  ┆ u32  ┆ u32  ┆ u32  ┆ u32  ┆ u32  │
+╞══════╪══════╪══════╪══════╪══════╪══════╪══════╪══════╪══════╪══════╪══════╡
+│ 0    ┆ 6    ┆ null ┆ null ┆ null ┆ null ┆ null ┆ null ┆ null ┆ null ┆ null │
+│ 1    ┆ null ┆ 1    ┆ 1    ┆ null ┆ null ┆ null ┆ null ┆ null ┆ null ┆ null │
+│ 2    ┆ null ┆ null ┆ 11   ┆ 2    ┆ 1    ┆ null ┆ null ┆ null ┆ null ┆ null │
+│ 3    ┆ 1    ┆ null ┆ 3    ┆ 459  ┆ 126  ┆ 8    ┆ null ┆ null ┆ null ┆ null │
+│ 4    ┆ 29   ┆ null ┆ 4    ┆ 92   ┆ 9144 ┆ 257  ┆ 15   ┆ 1    ┆ null ┆ 1    │
+│ 5    ┆ 5    ┆ 2    ┆ null ┆ 16   ┆ 595  ┆ 2206 ┆ 121  ┆ 4    ┆ 1    ┆ null │
+│ 6    ┆ 2    ┆ null ┆ null ┆ 3    ┆ 91   ┆ 187  ┆ 520  ┆ 22   ┆ 1    ┆ null │
+│ 7    ┆ null ┆ null ┆ null ┆ null ┆ 20   ┆ 20   ┆ 41   ┆ 68   ┆ 2    ┆ null │
+│ 8    ┆ null ┆ null ┆ null ┆ null ┆ 2    ┆ 1    ┆ 1    ┆ 5    ┆ 5    ┆ null │
+│ 11   ┆ null ┆ null ┆ null ┆ null ┆ 1    ┆ null ┆ null ┆ null ┆ null ┆ null │
+└──────┴──────┴──────┴──────┴──────┴──────┴──────┴──────┴──────┴──────┴──────┘
+n_defense in participation for these plays [{'part_n_def': 11, 'count': 14108}]

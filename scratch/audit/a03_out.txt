@@ -1,0 +1,211 @@
+season x season_type plays
+shape: (9, 3)
+┌────────┬─────────────┬───────┐
+│ season ┆ season_type ┆ plays │
+│ ---    ┆ ---         ┆ ---   │
+│ i64    ┆ str         ┆ u32   │
+╞════════╪═════════════╪═══════╡
+│ 2023   ┆ POST        ┆ 1113  │
+│ 2023   ┆ PRE         ┆ 5512  │
+│ 2023   ┆ REG         ┆ 25095 │
+│ 2024   ┆ POST        ┆ 1687  │
+│ 2024   ┆ PRE         ┆ 6202  │
+│ 2024   ┆ REG         ┆ 32616 │
+│ 2025   ┆ POST        ┆ 1777  │
+│ 2025   ┆ PRE         ┆ 6345  │
+│ 2025   ┆ REG         ┆ 34607 │
+└────────┴─────────────┴───────┘
+
+== label presence by side / season
+shape: (6, 7)
+┌────────┬────────┬───────┬───────┬──────────┬──────────┬────────────┐
+│ season ┆ is_def ┆ rows  ┆ cov   ┆ cov_snap ┆ blitz_nn ┆ blitz_true │
+│ ---    ┆ ---    ┆ ---   ┆ ---   ┆ ---      ┆ ---      ┆ ---        │
+│ i64    ┆ bool   ┆ u32   ┆ u32   ┆ u32      ┆ u32      ┆ u32        │
+╞════════╪════════╪═══════╪═══════╪══════════╪══════════╪════════════╡
+│ 2023   ┆ false  ┆ 29335 ┆ 0     ┆ 0        ┆ 21160    ┆ 0          │
+│ 2023   ┆ true   ┆ 21420 ┆ 9471  ┆ 9421     ┆ 12436    ┆ 5633       │
+│ 2024   ┆ false  ┆ 54539 ┆ 0     ┆ 0        ┆ 38495    ┆ 0          │
+│ 2024   ┆ true   ┆ 53985 ┆ 25279 ┆ 25094    ┆ 30667    ┆ 12109      │
+│ 2025   ┆ false  ┆ 77171 ┆ 0     ┆ 0        ┆ 53789    ┆ 0          │
+│ 2025   ┆ true   ┆ 77747 ┆ 37902 ┆ 37610    ┆ 44180    ┆ 19231      │
+└────────┴────────┴───────┴───────┴──────────┴──────────┴────────────┘
+defender lined_up_position x coverage_assignment-not-null
+shape: (9, 4)
+┌───────────────────┬───────┬───────┬───────┐
+│ lined_up_position ┆ n     ┆ cov   ┆ blitz │
+│ ---               ┆ ---   ┆ ---   ┆ ---   │
+│ str               ┆ u32   ┆ f64   ┆ f64   │
+╞═══════════════════╪═══════╪═══════╪═══════╡
+│ EDGE              ┆ 38398 ┆ 0.462 ┆ 0.923 │
+│ CB                ┆ 35017 ┆ 0.488 ┆ 0.004 │
+│ INTERIOR_LINE     ┆ 30301 ┆ 0.433 ┆ 0.983 │
+│ HIGH_SAFETY       ┆ 25608 ┆ 0.502 ┆ 0.001 │
+│ SLOT_CB           ┆ 14537 ┆ 0.588 ┆ 0.061 │
+│ OLB               ┆ 6362  ┆ 0.375 ┆ 0.096 │
+│ MLB               ┆ 1824  ┆ 0.4   ┆ 0.118 │
+│ null              ┆ 839   ┆ 0.0   ┆ 0.125 │
+│ BOX_SAFETY        ┆ 266   ┆ 0.722 ┆ 0.009 │
+└───────────────────┴───────┴───────┴───────┘
+assignment changed between snap and final: 0.1597781629116118
+top snap->final changes [{'coverage_assignment_at_snap': 'DEEP_THIRD_RIGHT', 'coverage_assignment': 'MAN', 'len': 404}, {'coverage_assignment_at_snap': 'QUARTERS_OUTSIDE_RIGHT', 'coverage_assignment': 'DEEP_THIRD_RIGHT', 'len': 362}, {'coverage_assignment_at_snap': 'QUARTERS_OUTSIDE_RIGHT', 'coverage_assignment': 'FLAT_RIGHT', 'len': 270}, {'coverage_assignment_at_snap': 'MAN', 'coverage_assignment': 'DEEP_THIRD_LEFT', 'len': 264}, {'coverage_assignment_at_snap': 'QUARTERS_INSIDE_LEFT', 'coverage_assignment': 'DEEP_HALF_LEFT', 'len': 258}, {'coverage_assignment_at_snap': 'QUARTERS_INSIDE_RIGHT', 'coverage_assignment': 'DEEP_HALF_RIGHT', 'len': 252}, {'coverage_assignment_at_snap': 'MAN', 'coverage_assignment': 'DEEP_THIRD_RIGHT', 'len': 249}, {'coverage_assignment_at_snap': 'DEEP_THIRD_LEFT', 'coverage_assignment': 'MAN', 'len': 233}, {'coverage_assignment_at_snap': 'CURL_FLAT_RIGHT', 'coverage_assignment': 'HOOK_CURL_RIGHT', 'len': 225}, {'coverage_assignment_at_snap': 'QUARTERS_OUTSIDE_LEFT', 'coverage_assignment': 'DEEP_THIRD_LEFT', 'len': 224}, {'coverage_assignment_at_snap': 'FLAT_RIGHT', 'coverage_assignment': 'QUARTERS_OUTSIDE_RIGHT', 'len': 218}, {'coverage_assignment_at_snap': 'MAN', 'coverage_assignment': 'FLAT_RIGHT', 'len': 217}]
+blitzing x coverage_assignment (defense)
+shape: (6, 3)
+┌──────────┬──────────┬───────┐
+│ blitzing ┆ cov_null ┆ len   │
+│ ---      ┆ ---      ┆ ---   │
+│ bool     ┆ bool     ┆ u32   │
+╞══════════╪══════════╪═══════╡
+│ null     ┆ false    ┆ 230   │
+│ null     ┆ true     ┆ 65639 │
+│ false    ┆ true     ┆ 7893  │
+│ false    ┆ false    ┆ 42417 │
+│ true     ┆ false    ┆ 30005 │
+│ true     ┆ true     ┆ 6968  │
+└──────────┴──────────┴───────┘
+coverage_assignment by team_coverage_type (top)
+shape: (40, 3)
+┌────────────────────┬────────────────────────┬──────┐
+│ team_coverage_type ┆ coverage_assignment    ┆ len  │
+│ ---                ┆ ---                    ┆ ---  │
+│ str                ┆ str                    ┆ u32  │
+╞════════════════════╪════════════════════════╪══════╡
+│ COVER_0_MAN        ┆ MAN                    ┆ 1781 │
+│ COVER_0_MAN        ┆ NO_ASSIGNMENT          ┆ 1515 │
+│ COVER_0_MAN        ┆ HOLE                   ┆ 116  │
+│ COVER_0_MAN        ┆ QUARTERS_INSIDE_RIGHT  ┆ 39   │
+│ COVER_0_MAN        ┆ QUARTERS_INSIDE_LEFT   ┆ 35   │
+│ COVER_1_MAN        ┆ MAN                    ┆ 6847 │
+│ COVER_1_MAN        ┆ NO_ASSIGNMENT          ┆ 5849 │
+│ COVER_1_MAN        ┆ DEEP_FREE              ┆ 1444 │
+│ COVER_1_MAN        ┆ HOLE                   ┆ 451  │
+│ COVER_1_MAN        ┆ DEEP_THIRD_MIDDLE      ┆ 104  │
+│ COVER_2_MAN        ┆ MAN                    ┆ 409  │
+│ COVER_2_MAN        ┆ NO_ASSIGNMENT          ┆ 347  │
+│ COVER_2_MAN        ┆ DEEP_HALF_RIGHT        ┆ 137  │
+│ COVER_2_MAN        ┆ DEEP_HALF_LEFT         ┆ 130  │
+│ COVER_2_MAN        ┆ HOLE                   ┆ 6    │
+│ COVER_2_ZONE       ┆ NO_ASSIGNMENT          ┆ 4180 │
+│ COVER_2_ZONE       ┆ DEEP_HALF_LEFT         ┆ 1132 │
+│ COVER_2_ZONE       ┆ FLAT_RIGHT             ┆ 1069 │
+│ COVER_2_ZONE       ┆ DEEP_HALF_RIGHT        ┆ 989  │
+│ COVER_2_ZONE       ┆ FLAT_LEFT              ┆ 968  │
+│ COVER_3_ZONE       ┆ NO_ASSIGNMENT          ┆ 9830 │
+│ COVER_3_ZONE       ┆ DEEP_THIRD_RIGHT       ┆ 2757 │
+│ COVER_3_ZONE       ┆ DEEP_THIRD_MIDDLE      ┆ 2522 │
+│ COVER_3_ZONE       ┆ CURL_FLAT_LEFT         ┆ 1997 │
+│ COVER_3_ZONE       ┆ DEEP_THIRD_LEFT        ┆ 1977 │
+│ COVER_4_ZONE       ┆ NO_ASSIGNMENT          ┆ 4992 │
+│ COVER_4_ZONE       ┆ QUARTERS_OUTSIDE_RIGHT ┆ 1537 │
+│ COVER_4_ZONE       ┆ QUARTERS_INSIDE_LEFT   ┆ 1326 │
+│ COVER_4_ZONE       ┆ QUARTERS_INSIDE_RIGHT  ┆ 1230 │
+│ COVER_4_ZONE       ┆ QUARTERS_OUTSIDE_LEFT  ┆ 976  │
+│ COVER_6_ZONE       ┆ NO_ASSIGNMENT          ┆ 2671 │
+│ COVER_6_ZONE       ┆ QUARTERS_INSIDE_LEFT   ┆ 469  │
+│ COVER_6_ZONE       ┆ FLAT_RIGHT             ┆ 427  │
+│ COVER_6_ZONE       ┆ QUARTERS_OUTSIDE_RIGHT ┆ 406  │
+│ COVER_6_ZONE       ┆ DEEP_HALF_LEFT         ┆ 355  │
+│ PREVENT            ┆ PREVENT                ┆ 148  │
+│ PREVENT            ┆ NO_ASSIGNMENT          ┆ 58   │
+│ PREVENT            ┆ MAN                    ┆ 17   │
+│ PREVENT            ┆ DEEP_HALF_LEFT         ┆ 5    │
+│ PREVENT            ┆ HOOK_CURL_RIGHT        ┆ 2    │
+└────────────────────┴────────────────────────┴──────┘
+
+== join to BDB 2026
+bdb26 plays 14108 with any bdb27 player_play row 10620
+bdb26 supp (incl. 2024) plays joined 14346 of 18009
+bdb26 coverage defenders: 94293 with a bdb27 row: 3426 with coverage_assignment: 3426
+labeled coverage defenders per bdb26 play [{'n_lab': 0, 'count': 10944}, {'n_lab': 1, 'count': 2900}, {'n_lab': 2, 'count': 263}]
+plays where ALL coverage defenders labeled 0
+assignment values for bdb26 coverage defenders
+shape: (21, 2)
+┌────────────────────────┬───────┐
+│ coverage_assignment    ┆ count │
+│ ---                    ┆ ---   │
+│ str                    ┆ u32   │
+╞════════════════════════╪═══════╡
+│ null                   ┆ 90867 │
+│ MAN                    ┆ 849   │
+│ DEEP_THIRD_RIGHT       ┆ 330   │
+│ CURL_FLAT_LEFT         ┆ 258   │
+│ CURL_FLAT_RIGHT        ┆ 238   │
+│ DEEP_THIRD_LEFT        ┆ 234   │
+│ FLAT_RIGHT             ┆ 198   │
+│ QUARTERS_OUTSIDE_RIGHT ┆ 187   │
+│ FLAT_LEFT              ┆ 135   │
+│ QUARTERS_OUTSIDE_LEFT  ┆ 127   │
+│ DEEP_FREE              ┆ 122   │
+│ HOOK_CURL_RIGHT        ┆ 115   │
+│ HOOK_CURL_LEFT         ┆ 112   │
+│ DEEP_HALF_LEFT         ┆ 105   │
+│ DEEP_HALF_RIGHT        ┆ 102   │
+│ DEEP_THIRD_MIDDLE      ┆ 101   │
+│ QUARTERS_INSIDE_LEFT   ┆ 74    │
+│ QUARTERS_INSIDE_RIGHT  ┆ 68    │
+│ HOLE                   ┆ 60    │
+│ PREVENT                ┆ 9     │
+│ NO_ASSIGNMENT          ┆ 2     │
+└────────────────────────┴───────┘
+bdb26 defenders labeled as blitzing=True: 0
+bdb27 defender rows on bdb26 plays that are absent from bdb26 tracking: 2743 [{'lined_up_position': 'EDGE', 'count': 1693}, {'lined_up_position': 'INTERIOR_LINE', 'count': 975}, {'lined_up_position': 'SLOT_CB', 'count': 47}, {'lined_up_position': 'OLB', 'count': 15}, {'lined_up_position': 'MLB', 'count': 8}, {'lined_up_position': 'CB', 'count': 4}] blitzing [{'blitzing': None, 'count': 1}, {'blitzing': True, 'count': 2742}] cov [{'coverage_assignment': 'NO_ASSIGNMENT', 'count': 2695}, {'coverage_assignment': 'MAN', 'count': 18}, {'coverage_assignment': 'CURL_FLAT_RIGHT', 'count': 17}, {'coverage_assignment': 'CURL_FLAT_LEFT', 'count': 7}]
+
+== team_coverage_type agreement
+plays with >1 distinct team_coverage_type across rows (internal inconsistency): 0
+bdb26 vs bdb27 both labeled: 14339 agree: 93.07 %
+[{'team_coverage_type': 'COVER_1_MAN', 'tc27': 'COVER_3_ZONE', 'len': 298}, {'team_coverage_type': 'COVER_4_ZONE', 'tc27': 'COVER_3_ZONE', 'len': 126}, {'team_coverage_type': 'COVER_6_ZONE', 'tc27': 'COVER_4_ZONE', 'len': 73}, {'team_coverage_type': 'COVER_2_ZONE', 'tc27': 'COVER_6_ZONE', 'len': 58}, {'team_coverage_type': 'COVER_1_MAN', 'tc27': 'COVER_0_MAN', 'len': 58}, {'team_coverage_type': 'COVER_3_ZONE', 'tc27': 'COVER_1_MAN', 'len': 35}, {'team_coverage_type': 'COVER_6_ZONE', 'tc27': 'COVER_2_ZONE', 'len': 29}, {'team_coverage_type': 'COVER_4_ZONE', 'tc27': 'COVER_6_ZONE', 'len': 27}, {'team_coverage_type': 'COVER_2_ZONE', 'tc27': 'COVER_4_ZONE', 'len': 26}, {'team_coverage_type': 'COVER_2_ZONE', 'tc27': 'COVER_3_ZONE', 'len': 25}, {'team_coverage_type': 'COVER_4_ZONE', 'tc27': 'COVER_0_MAN', 'len': 23}, {'team_coverage_type': 'COVER_1_MAN', 'tc27': 'COVER_4_ZONE', 'len': 21}, {'team_coverage_type': 'COVER_4_ZONE', 'tc27': 'COVER_1_MAN', 'len': 21}, {'team_coverage_type': 'COVER_2_MAN', 'tc27': 'COVER_1_MAN', 'len': 21}, {'team_coverage_type': 'COVER_3_ZONE', 'tc27': 'COVER_4_ZONE', 'len': 20}]
+participation 2023+ coverage values [{'ftn_cov': None, 'count': 74560}, {'ftn_cov': 'COVER_1', 'count': 21580}, {'ftn_cov': 'COVER_3', 'count': 14832}, {'ftn_cov': 'COVER_2', 'count': 13441}, {'ftn_cov': 'COVER_4', 'count': 6795}, {'ftn_cov': '2_MAN', 'count': 4191}, {'ftn_cov': 'COVER_6', 'count': 3371}, {'ftn_cov': 'COVER_0', 'count': 2769}, {'ftn_cov': 'COMBO', 'count': 1746}, {'ftn_cov': 'COVER_9', 'count': 1354}, {'ftn_cov': 'BLOWN', 'count': 101}, {'ftn_cov': 'PREVENT', 'count': 16}]
+participation 2023+ man/zone values [{'ftn_mz': '', 'count': 69869}, {'ftn_mz': 'ZONE_COVERAGE', 'count': 41656}, {'ftn_mz': 'MAN_COVERAGE', 'count': 28540}, {'ftn_mz': None, 'count': 4691}]
+
+bdb26 (2023-24) vs nflverse/FTN: joined+labeled 17971; exact taxonomy match 56.63%
+shape: (2, 3)
+┌────────┬───────┬────────┐
+│ season ┆ len   ┆ agree  │
+│ ---    ┆ ---   ┆ ---    │
+│ i64    ┆ u32   ┆ f64    │
+╞════════╪═══════╪════════╡
+│ 2023   ┆ 14074 ┆ 0.5581 │
+│ 2024   ┆ 3897  ┆ 0.5958 │
+└────────┴───────┴────────┘
+shape: (8, 11)
+┌────────────────────┬───────┬───────┬───────┬─────────┬─────────┬─────────┬─────────┬─────────┬─────────┬─────────┐
+│ team_coverage_type ┆ 2_MAN ┆ BLOWN ┆ COMBO ┆ COVER_0 ┆ COVER_1 ┆ COVER_2 ┆ COVER_3 ┆ COVER_4 ┆ COVER_6 ┆ COVER_9 │
+│ ---                ┆ ---   ┆ ---   ┆ ---   ┆ ---     ┆ ---     ┆ ---     ┆ ---     ┆ ---     ┆ ---     ┆ ---     │
+│ str                ┆ u32   ┆ u32   ┆ u32   ┆ u32     ┆ u32     ┆ u32     ┆ u32     ┆ u32     ┆ u32     ┆ u32     │
+╞════════════════════╪═══════╪═══════╪═══════╪═════════╪═════════╪═════════╪═════════╪═════════╪═════════╪═════════╡
+│ COVER_0_MAN        ┆ 7     ┆ null  ┆ 31    ┆ 460     ┆ 186     ┆ 21      ┆ 14      ┆ 58      ┆ 2       ┆ 2       │
+│ COVER_1_MAN        ┆ 199   ┆ null  ┆ 124   ┆ 51      ┆ 3496    ┆ 43      ┆ 134     ┆ 39      ┆ 9       ┆ 6       │
+│ COVER_2_MAN        ┆ 250   ┆ null  ┆ 5     ┆ null    ┆ 55      ┆ 12      ┆ 2       ┆ 2       ┆ 3       ┆ 2       │
+│ COVER_2_ZONE       ┆ 102   ┆ null  ┆ 42    ┆ 2       ┆ 77      ┆ 1818    ┆ 177     ┆ 126     ┆ 123     ┆ 43      │
+│ COVER_3_ZONE       ┆ 67    ┆ 1     ┆ 308   ┆ 31      ┆ 1627    ┆ 267     ┆ 2701    ┆ 478     ┆ 110     ┆ 65      │
+│ COVER_4_ZONE       ┆ 309   ┆ 2     ┆ 158   ┆ 22      ┆ 327     ┆ 389     ┆ 234     ┆ 1088    ┆ 238     ┆ 85      │
+│ COVER_6_ZONE       ┆ 160   ┆ null  ┆ 127   ┆ 2       ┆ 185     ┆ 516     ┆ 126     ┆ 135     ┆ 364     ┆ 78      │
+│ PREVENT            ┆ 2     ┆ null  ┆ 8     ┆ null    ┆ 2       ┆ 2       ┆ 4       ┆ 8       ┆ null    ┆ 22      │
+└────────────────────┴───────┴───────┴───────┴─────────┴─────────┴─────────┴─────────┴─────────┴─────────┴─────────┘
+
+bdb27 (2023-25) vs nflverse/FTN: joined+labeled 56889; exact taxonomy match 57.30%
+shape: (3, 3)
+┌────────┬───────┬────────┐
+│ season ┆ len   ┆ agree  │
+│ ---    ┆ ---   ┆ ---    │
+│ i64    ┆ u32   ┆ f64    │
+╞════════╪═══════╪════════╡
+│ 2023   ┆ 16242 ┆ 0.5303 │
+│ 2024   ┆ 19845 ┆ 0.5426 │
+│ 2025   ┆ 20802 ┆ 0.6353 │
+└────────┴───────┴────────┘
+shape: (8, 11)
+┌────────────────────┬───────┬───────┬───────┬─────────┬─────────┬─────────┬─────────┬─────────┬─────────┬─────────┐
+│ team_coverage_type ┆ 2_MAN ┆ BLOWN ┆ COMBO ┆ COVER_0 ┆ COVER_1 ┆ COVER_2 ┆ COVER_3 ┆ COVER_4 ┆ COVER_6 ┆ COVER_9 │
+│ ---                ┆ ---   ┆ ---   ┆ ---   ┆ ---     ┆ ---     ┆ ---     ┆ ---     ┆ ---     ┆ ---     ┆ ---     │
+│ str                ┆ u32   ┆ u32   ┆ u32   ┆ u32     ┆ u32     ┆ u32     ┆ u32     ┆ u32     ┆ u32     ┆ u32     │
+╞════════════════════╪═══════╪═══════╪═══════╪═════════╪═════════╪═════════╪═════════╪═════════╪═════════╪═════════╡
+│ COVER_0_MAN        ┆ 65    ┆ 13    ┆ 57    ┆ 1858    ┆ 679     ┆ 120     ┆ 152     ┆ 196     ┆ 20      ┆ 9       │
+│ COVER_1_MAN        ┆ 690   ┆ 11    ┆ 158   ┆ 135     ┆ 9986    ┆ 187     ┆ 478     ┆ 120     ┆ 34      ┆ 15      │
+│ COVER_2_MAN        ┆ 663   ┆ null  ┆ 9     ┆ null    ┆ 83      ┆ 35      ┆ 11      ┆ 7       ┆ 4       ┆ 12      │
+│ COVER_2_ZONE       ┆ 267   ┆ 8     ┆ 66    ┆ 11      ┆ 172     ┆ 6130    ┆ 545     ┆ 275     ┆ 280     ┆ 151     │
+│ COVER_3_ZONE       ┆ 199   ┆ 32    ┆ 516   ┆ 102     ┆ 5019    ┆ 1002    ┆ 9727    ┆ 1155    ┆ 424     ┆ 306     │
+│ COVER_4_ZONE       ┆ 1019  ┆ 11    ┆ 277   ┆ 55      ┆ 781     ┆ 2096    ┆ 735     ┆ 3162    ┆ 844     ┆ 328     │
+│ COVER_6_ZONE       ┆ 502   ┆ 2     ┆ 196   ┆ 5       ┆ 450     ┆ 1838    ┆ 492     ┆ 356     ┆ 1070    ┆ 281     │
+│ PREVENT            ┆ 19    ┆ null  ┆ 21    ┆ null    ┆ 4       ┆ 12      ┆ 27      ┆ 33      ┆ null    ┆ 79      │
+└────────────────────┴───────┴───────┴───────┴─────────┴─────────┴─────────┴─────────┴─────────┴─────────┴─────────┘

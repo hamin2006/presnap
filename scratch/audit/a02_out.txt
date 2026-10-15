@@ -1,0 +1,22 @@
+bdb27 tracking rows 3665443 plays 31690 games 333
+events: [{'event': None, 'count': 3422066}, {'event': 'ball_snap', 'count': 50813}, {'event': 'pass_forward', 'count': 31422}, {'event': 'tackle', 'count': 29011}, {'event': 'first_contact', 'count': 28345}, {'event': 'pass_arrived', 'count': 23967}, {'event': 'pass_outcome_caught', 'count': 18845}, {'event': 'handoff', 'count': 14053}, {'event': 'pass_outcome_incomplete', 'count': 10862}, {'event': 'play_action', 'count': 8274}, {'event': 'out_of_bounds', 'count': 6082}, {'event': 'autoevent_passinterrupted', 'count': 4237}, {'event': 'run', 'count': 2899}, {'event': 'qb_sack', 'count': 2104}, {'event': 'man_in_motion', 'count': 1827}, {'event': 'line_set', 'count': 1610}, {'event': 'play_submit', 'count': 1264}, {'event': 'touchdown', 'count': 1174}, {'event': 'dropped_pass', 'count': 807}, {'event': 'pass_outcome_interception', 'count': 754}, {'event': 'pass_outcome_touchdown', 'count': 646}, {'event': 'pass_tipped', 'count': 561}, {'event': 'fumble', 'count': 496}, {'event': 'qb_kneel', 'count': 493}, {'event': 'qb_slide', 'count': 419}, {'event': 'shift', 'count': 397}, {'event': 'fumble_offense_recovered', 'count': 316}, {'event': 'fumble_defense_recovered', 'count': 304}, {'event': 'qb_sneak', 'count': 293}, {'event': 'qb_strip_sack', 'count': 249}, {'event': 'lateral', 'count': 151}, {'event': 'pass_shovel', 'count': 134}, {'event': 'snap_direct', 'count': 108}, {'event': 'autoevent_playaction', 'count': 96}, {'event': 'two_point_conversion', 'count': 91}, {'event': 'qb_spike', 'count': 77}, {'event': 'penalty_flag', 'count': 52}, {'event': 'run_attempt', 'count': 41}, {'event': 'touchback', 'count': 39}, {'event': 'huddle_break_offense', 'count': 25}, {'event': 'huddle_start_offense', 'count': 15}, {'event': 'safety', 'count': 10}, {'event': 'penalty_accepted', 'count': 6}, {'event': 'penalty_declined', 'count': 6}, {'event': 'field_goal_attempt', 'count': 2}]
+players per play in bdb27 tracking [{'nply': 1, 'count': 17738}, {'nply': 2, 'count': 9662}, {'nply': 3, 'count': 3417}, {'nply': 4, 'count': 774}, {'nply': 5, 'count': 92}, {'nply': 6, 'count': 7}]
+frame spacing ms values [{'d': 100, 'count': 50911}, {'d': 200, 'count': 3}]
+plays w/ ball_snap 31603
+frames before snap in bdb27 (snap_fr-1): shape: (1, 5)
+┌─────┬──────┬─────┬──────┬──────┐
+│ 0   ┆ 0.05 ┆ 0.5 ┆ 0.95 ┆ 1    │
+│ --- ┆ ---  ┆ --- ┆ ---  ┆ ---  │
+│ f64 ┆ f64  ┆ f64 ┆ f64  ┆ f64  │
+╞═════╪══════╪═════╪══════╪══════╡
+│ 0.0 ┆ 9.0  ┆ 9.0 ┆ 10.0 ┆ 10.0 │
+└─────┴──────┴─────┴──────┴──────┘
+
+(game,play,nfl_id) in both bdb26 input and bdb27 tracking: 9519 plays 7314
+bdb26 frames (<=5) with exact x,y match in bdb27: 1.0
+offset of bdb26 frame 1 from bdb27 ball_snap frame (0 = frame 1 is the snap):
+[{'off': 0, 'count': 9510}, {'off': None, 'count': 5}, {'off': 1, 'count': 4}]
+unique-match only (moving player, n_match==1): [{'off': 0, 'count': 5857}, {'off': 1, 'count': 4}, {'off': None, 'count': 3}]
+
+last bdb26 input frame minus bdb27 pass_forward frame: [{'off': -1, 'count': 9514}]
+bdb26 n_frames - (pass_forward - snap) : [{'frame_id': 0, 'count': 9510}, {'frame_id': -1, 'count': 4}]
