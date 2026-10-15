@@ -13,7 +13,7 @@ import numpy as np
 import pandas as pd
 import polars as pl
 import xgboost as xgb
-from sklearn.metrics import f1_score, log_loss
+from sklearn.metrics import f1_score, log_loss, roc_auc_score
 
 from presnap import features, io, labels
 from presnap.shell import KEY
@@ -23,6 +23,7 @@ TARGETS = {
     "man": ("man_zone", ["ZONE", "MAN"]),
     "cov7": ("coverage", labels.COVERAGE7),
     "shell": ("shell_played", [0, 1, 2]),
+    "blitz": ("blitz", [False, True]),  # 5+ pass rushers; StatsBomb only (rushers aren't tracked in BDB 2026)
 }
 
 
@@ -66,6 +67,8 @@ def fit_eval(data, cols, target, train="train", val="val", test="test"):
     res = dict(n=len(yte), acc=round(float(correct.mean()), 4), ci=[round(lo, 4), round(hi, 4)],
                logloss=round(float(log_loss(yte, P, labels=list(range(k)))), 4),
                macro_f1=round(float(f1_score(yte, pred, average="macro")), 4))
+    if k == 2:
+        res["auc"] = round(float(roc_auc_score(yte, P[:, 1])), 4)
     if "labels_agree" in te.columns and te["labels_agree"].drop_nulls().len():
         a = te["labels_agree"].fill_null(False).to_numpy()
         res["acc_agree_subset"] = round(float(correct[a].mean()), 4)

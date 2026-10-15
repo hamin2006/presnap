@@ -7,7 +7,7 @@ Our own implementation; the per-frame player encoder follows the idea in SumerSp
 import torch
 from torch import nn
 
-HEADS = {"cov": 7, "man": 2, "shell": 3}
+HEADS = {"cov": 7, "man": 2, "shell": 3, "blitz": 2}
 
 
 class CoverageModel(nn.Module):
