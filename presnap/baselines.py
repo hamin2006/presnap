@@ -30,7 +30,7 @@ def to_xy(df, cols, target, cats):
     col, classes = TARGETS[target]
     df = df.filter(pl.col(col).is_in(classes))
     y = df[col].replace_strict({c: i for i, c in enumerate(classes)}, return_dtype=pl.Int32).to_numpy()
-    X = df.select(cols).to_pandas()
+    X = df.select(cols).with_columns(pl.col(pl.Boolean).cast(pl.Float32)).to_pandas()
     for c, vocab in cats.items():
         if c in X:  # one vocabulary across splits; values unseen in training just never get split on
             X[c] = pd.Categorical(X[c], categories=vocab)
