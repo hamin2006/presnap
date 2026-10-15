@@ -11,12 +11,17 @@ import numpy as np
 
 W = 53.3
 YARD_LINES = np.arange(10, 111, 5)
+BORDER = 1.0  # the detected "sideline" is the middle of the 2-yd white border outside the field: y = -1 / 54.3
+
+
+def white_mask(img):
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    field = cv2.morphologyEx(cv2.inRange(hsv, (30, 40, 40), (90, 255, 255)), cv2.MORPH_CLOSE, np.ones((25, 25), np.uint8))
+    return cv2.inRange(hsv, (0, 0, 170), (180, 60, 255)) & field
 
 
 def _lines(img):
-    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-    field = cv2.morphologyEx(cv2.inRange(hsv, (30, 40, 40), (90, 255, 255)), cv2.MORPH_CLOSE, np.ones((25, 25), np.uint8))
-    white = cv2.inRange(hsv, (0, 0, 170), (180, 60, 255)) & field
+    white = white_mask(img)
     segs = cv2.HoughLinesP(white, 1, np.pi / 360, threshold=80, minLineLength=80, maxLineGap=15)
     return np.zeros((0, 4)) if segs is None else segs.reshape(-1, 4).astype(float)
 
@@ -73,7 +78,8 @@ def homography(lines, first_idx, direction, y_far):
     xs = YARD_LINES[first_idx + direction * np.arange(len(yard))] if direction > 0 else YARD_LINES[first_idx - np.arange(len(yard))]
     src, dst = [], []
     for x, l in zip(xs, yard):
-        for s, y in ((far, y_far), (near, W - y_far)):
+        yf = -BORDER if y_far == 0 else W + BORDER
+        for s, y in ((far, yf), (near, W + BORDER if y_far == 0 else -BORDER)):
             src.append((x, y)); dst.append(_cross(l, s))
     H, _ = cv2.findHomography(np.array(src, np.float32), np.array(dst, np.float32), cv2.RANSAC, 6.0)
     return H
@@ -115,3 +121,37 @@ def pick_consistent(lines, prev_H, direction, y_far, h, w):
         if d < best_d:
             best, best_d = H, d
     return best
+
+
+def model_points(step=0.5):
+    """Points on the painted lines we can see: yard lines and the middle of each sideline border."""
+    pts = [(x, y) for x in YARD_LINES for y in np.arange(0, W + 1e-6, step)]
+    pts += [(x, y) for x in np.arange(10, 110 + 1e-6, step) for y in (-BORDER, W + BORDER)]
+    return np.array(pts, np.float32)
+
+
+def refine(H, img, iters=2):
+    """Nudge the field->image homography so the painted-line model sits on white pixels (robust least squares
+    on the distance transform of the white mask). Returns the refined H and the median residual in pixels."""
+    from scipy.optimize import least_squares
+    white = white_mask(img)
+    dt = cv2.distanceTransform(255 - white, cv2.DIST_L2, 3)
+    h, w = dt.shape
+    P = model_points()
+
+    def project(p8):
+        Hm = np.append(p8, 1.0).reshape(3, 3)
+        return cv2.perspectiveTransform(P[None], Hm)[0]
+
+    def resid(p8):
+        q = project(p8)
+        ok = (q[:, 0] > 1) & (q[:, 0] < w - 2) & (q[:, 1] > 1) & (q[:, 1] < h - 2)
+        r = np.full(len(q), 15.0)
+        r[ok] = cv2.remap(dt, q[ok, 0:1].astype(np.float32), q[ok, 1:2].astype(np.float32), cv2.INTER_LINEAR)[:, 0]
+        return np.minimum(r, 15.0)
+
+    p = (H / H[2, 2]).ravel()[:8]
+    for _ in range(iters):
+        p = least_squares(resid, p, loss="huber", f_scale=2.0, x_scale="jac", max_nfev=200).x
+    r = resid(p)
+    return np.append(p, 1.0).reshape(3, 3), float(np.median(r[r < 15])) if (r < 15).any() else np.inf
