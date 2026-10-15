@@ -27,6 +27,7 @@ V = io.ROOT / "data/raw/video/nfl-player-contact-detection"
 OUT = io.ROOT / "data/interim/video"
 FPS = 60000 / 1001
 STEPS = list(range(-10, 31, 5))
+DET_STEPS = {-10, 0, 20}  # detection (labeling evidence, accuracy, box size) on these; registration carried between
 EVAL_SEED, N_EVAL = 0, 40
 
 
@@ -89,7 +90,10 @@ def main(limit=None):
             lines = R.detect_lines(img) if ok else None
             if lines is None or not len(truth):
                 rows.append(rec); continue
-            boxes, _ = Dt.detect(det_model, img)
+            if s in DET_STEPS or H is None:
+                boxes, _ = Dt.detect(det_model, img)
+            else:
+                boxes = np.zeros((0, 4))
             fpx = Dt.feet(boxes) if len(boxes) else np.zeros((0, 2))
             if H is None:  # first usable frame: NGS-assisted labeling and orientation
                 first = oracle_snap(lines, fpx, truth)
@@ -112,7 +116,7 @@ def main(limit=None):
             if len(m):
                 bh = boxes[m[:, 1], 3] - boxes[m[:, 1], 1]
                 ratio += list(bh / ppy[m[:, 0]])
-            rec.update(registered=True, resid_px=resid_px, n_det=len(fpx), n_match=len(m),
+            rec.update(registered=True, resid_px=resid_px, n_det=len(fpx), n_match=len(m), detected=len(fpx) > 0,
                        median_err=float(np.median(err)) if len(err) else None,
                        within_1yd=float((err <= 1).sum() / len(truth)), within_05yd=float((err <= 0.5).sum() / len(truth)))
             rows.append(rec)
@@ -139,11 +143,11 @@ def main(limit=None):
     pl.DataFrame(sync, infer_schema_length=None).write_parquet(OUT / "sync.parquet")
     reg = df.filter("registered")
     summ = dict(frames=df.height, registered=round(reg.height / df.height, 3),
-                median_err_yd=round(float(reg["median_err"].median()), 3), p90_err_yd=round(float(reg["median_err"].quantile(.9)), 3),
+                median_err_yd=round(float(reg["median_err"].drop_nulls().median()), 3), p90_err_yd=round(float(reg["median_err"].drop_nulls().quantile(.9)), 3),
                 median_resid_px=round(float(reg["resid_px"].median()), 2),
                 sync_median_err_by_offset={c: round(float(pl.DataFrame(sync, infer_schema_length=None)[c].median()), 3)
                                            for c in pl.DataFrame(sync, infer_schema_length=None).columns if c.startswith("off_")},
-                by_step=reg.group_by("step").agg(pl.col("median_err").median().round(3), pl.col("n_match").mean().round(1), pl.len()).sort("step").rows())
+                by_step=reg.filter("detected").group_by("step").agg(pl.col("median_err").median().round(3), pl.col("n_match").mean().round(1), pl.len()).sort("step").rows())
     (io.ROOT / "reports/phase2b_oracle_registration.json").write_text(json.dumps(summ, indent=2))
     print(json.dumps(summ, indent=2))
 
