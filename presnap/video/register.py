@@ -147,7 +147,8 @@ def refine(H, img, iters=2):
         q = project(p8)
         ok = (q[:, 0] > 1) & (q[:, 0] < w - 2) & (q[:, 1] > 1) & (q[:, 1] < h - 2)
         r = np.full(len(q), 15.0)
-        r[ok] = cv2.remap(dt, q[ok, 0:1].astype(np.float32), q[ok, 1:2].astype(np.float32), cv2.INTER_LINEAR)[:, 0]
+        if ok.any():
+            r[ok] = cv2.remap(dt, q[ok, 0:1].astype(np.float32), q[ok, 1:2].astype(np.float32), cv2.INTER_LINEAR)[:, 0]
         return np.minimum(r, 15.0)
 
     p = (H / H[2, 2]).ravel()[:8]
