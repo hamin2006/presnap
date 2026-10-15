@@ -10,6 +10,7 @@ Run (on the PC): uv run python -m presnap.baselines
 import json
 
 import numpy as np
+import pandas as pd
 import polars as pl
 import xgboost as xgb
 from sklearn.metrics import f1_score, log_loss
@@ -25,14 +26,14 @@ TARGETS = {
 }
 
 
-def to_xy(df, cols, target):
+def to_xy(df, cols, target, cats):
     col, classes = TARGETS[target]
     df = df.filter(pl.col(col).is_in(classes))
     y = df[col].replace_strict({c: i for i, c in enumerate(classes)}, return_dtype=pl.Int32).to_numpy()
     X = df.select(cols).to_pandas()
-    for c in features.SITUATION_CAT:
-        if c in X:
-            X[c] = X[c].astype("category")
+    for c, vocab in cats.items():
+        if c in X:  # one vocabulary across splits; values unseen in training just never get split on
+            X[c] = pd.Categorical(X[c], categories=vocab)
     return df, X, y, len(classes)
 
 
@@ -46,9 +47,10 @@ def boot_ci(games, correct, n=1000):
 
 
 def fit_eval(data, cols, target, train="train", val="val", test="test"):
-    tr, Xtr, ytr, k = to_xy(data.filter(split=train), cols, target)
-    va, Xva, yva, _ = to_xy(data.filter(split=val), cols, target)
-    te, Xte, yte, _ = to_xy(data.filter(split=test), cols, target)
+    cats = {c: sorted(data[c].drop_nulls().unique().to_list()) for c in features.SITUATION_CAT if c in data.columns}
+    tr, Xtr, ytr, k = to_xy(data.filter(split=train), cols, target, cats)
+    va, Xva, yva, _ = to_xy(data.filter(split=val), cols, target, cats)
+    te, Xte, yte, _ = to_xy(data.filter(split=test), cols, target, cats)
     if not cols:  # majority class
         p = np.bincount(ytr, minlength=k) / len(ytr)
         P = np.tile(p, (len(yte), 1))
@@ -71,7 +73,7 @@ def fit_eval(data, cols, target, train="train", val="val", test="test"):
 
 
 def main():
-    plays = pl.read_parquet(io.PROCESSED / "plays.parquet")
+    plays = features.personnel_counts(pl.read_parquet(io.PROCESSED / "plays.parquet"))
     sit = features.SITUATION_NUM + features.SITUATION_CAT
 
     b = plays.filter(source="bdb26").join(

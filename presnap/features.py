@@ -15,8 +15,20 @@ from presnap import io
 from presnap.shell import KEY, shell_at
 
 SITUATION_NUM = ["down", "ydstogo", "yardline_100", "qtr", "half_seconds_remaining", "score_differential",
-                 "shotgun", "no_huddle", "defenders_in_box", "ftn_is_motion"]
-SITUATION_CAT = ["offense_formation", "receiver_alignment", "offense_personnel", "defense_personnel"]
+                 "shotgun", "no_huddle", "defenders_in_box", "ftn_is_motion",
+                 "off_rb", "off_te", "off_wr", "def_dl", "def_lb", "def_db"]
+SITUATION_CAT = ["offense_formation", "receiver_alignment"]
+PERSONNEL = {"off_rb": ("offense_personnel", ["RB", "FB"]), "off_te": ("offense_personnel", ["TE"]),
+             "off_wr": ("offense_personnel", ["WR"]), "def_dl": ("defense_personnel", ["DL", "DE", "DT", "NT"]),
+             "def_lb": ("defense_personnel", ["LB", "ILB", "MLB", "OLB"]),
+             "def_db": ("defense_personnel", ["DB", "CB", "S", "FS", "SS"])}
+
+
+def personnel_counts(df: pl.DataFrame) -> pl.DataFrame:
+    """nflverse personnel strings ("1 RB, 2 TE, 2 WR" or full position lists) -> counts per group."""
+    def count(col, pos):
+        return pl.sum_horizontal([pl.col(col).str.extract(rf"(\d+) {p}(?:,|$)").cast(pl.Int8).fill_null(0) for p in pos])
+    return df.with_columns([count(col, pos).alias(name) for name, (col, pos) in PERSONNEL.items()])
 N_DEEP = 5
 
 
