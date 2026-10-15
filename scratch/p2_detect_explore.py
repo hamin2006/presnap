@@ -25,7 +25,7 @@ def tiled(model, img, tile=640, overlap=160, imgsz=1280, conf=0.15):
             b = r.boxes.xyxy.cpu().numpy() + [x, y, x, y]
             boxes.append(b); scores.append(r.boxes.conf.cpu().numpy())
     b, s = np.concatenate(boxes), np.concatenate(scores)
-    keep = nms(torch.tensor(b), torch.tensor(s), 0.5).numpy()
+    keep = nms(torch.tensor(b, dtype=torch.float32), torch.tensor(s, dtype=torch.float32), 0.5).numpy()
     return b[keep]
 
 
