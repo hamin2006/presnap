@@ -16,7 +16,14 @@ man_ens = np.mean([np.load(io.INTERIM / f"runs/main/seed{s}.npz")["man"] for s i
 # GBM snap predictions for the same test plays, in the same order (plays sorted by KEY in seq.build)
 plays = features.personnel_counts(pl.read_parquet(io.PROCESSED / "plays.parquet")).filter(source="bdb26").sort(KEY)
 b = plays.join(features.build("bdb26", {"snap": 0}), on=KEY, how="left").sort(KEY)
+cnt = (pl.scan_parquet(io.PROCESSED / "tracking.parquet").filter((pl.col("source") == "bdb26") & (pl.col("frame") == 0) & (pl.col("side") == "def"))
+       .group_by(KEY).agg(n_cov_def=pl.len()).collect())
+b = b.join(cnt, on=KEY, how="left").sort(KEY)
 cols = features.SITUATION_NUM + features.SITUATION_CAT + [c for c in b.columns if c.startswith("snap_")]
+import sys
+if "--with-count" in sys.argv:
+    cols = cols + ["n_cov_def"]  # deliberately leaky: gives the GBM the same count signal the transformer can infer
+    print("GBM includes the defender count")
 out = {}
 for tgt, key, P in (("cov7", "y_cov", ens), ("man", "y_man", man_ens)):
     cats = {c: sorted(b[c].drop_nulls().unique().to_list()) for c in features.SITUATION_CAT}
