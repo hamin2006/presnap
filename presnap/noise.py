@@ -74,7 +74,7 @@ def main(tag="main"):
              "Drift = AR(1) position error (ρ = 0.8 per 0.1 s), σ in yards; drop = share of player-frames missing; swap = share of plays with one identity switch.", "",
              "| Condition | Man/zone snap | +2.0 s | 7-class snap | +2.0 s | Shell snap | +2.0 s |", "|---|---|---|---|---|---|---|"]
     for k, r in res.items():
-        if isinstance(r, dict):
+        if isinstance(r, dict) and "man" in r:
             lines.append(f"| {k} | {r['man']['snap']:.1%} | {r['man']['+2.0 s']:.1%} | {r['cov']['snap']:.1%} | {r['cov']['+2.0 s']:.1%} | "
                          f"{r['shell']['snap']:.1%} | {r['shell']['+2.0 s']:.1%} |")
     lines += ["", f"**Tolerance (largest σ losing ≤ 3 pts man/zone and ≤ 5 pts shell at the snap), model `{tag}`:** {tol}. "
