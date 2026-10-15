@@ -34,3 +34,21 @@ Transformer (214,476 params, 5-seed ensemble, max_def=None) vs GBM trained at th
 | +1.5 s | **96.0%** | 95.0%–96.9% | 97.2% | 92.5% | 91.4%–93.6% |
 | +2.0 s | **95.8%** | 94.9%–96.7% | 97.0% | 92.8% | 91.5%–94.0% |
 | throw | **95.9%** | 95.0%–96.7% | 97.1% | 90.9% | 89.3%–92.3% |
+
+## Is the snap advantage just the defender count?
+
+BDB 2026 tracks only defenders who dropped into coverage, so a model could infer how many rushed. Two checks (single seed for the ablation, 5-seed ensemble otherwise; test weeks 16–18):
+
+| Check | 7-class at the snap | Man/zone at the snap |
+|---|---|---|
+| Transformer, all coverage defenders | 73.8% | 91.1% |
+| Transformer, 5 deepest only (count removed, underneath defenders removed too) | 67.8% | 87.1% |
+| GBM, snap features (never sees the count) | 65.6% | 87.3% |
+| GBM + the defender count (deliberately leaky) | 66.6% | 87.9% |
+
+- The count is worth about **1 point** to the GBM, so the transformer's +7.2 / +3.2 snap lead over the count-aware GBM is a real architectural gain.
+- Within each defender-count group (e.g. the 1,660 test plays with 7 coverage defenders: 71.3% vs 64.5% for 7-class), the transformer still leads.
+- The 5-deepest ablation drop comes mostly from losing the alignment of underneath defenders (LBs, nickel), which is real information.
+- Fully clean check (all 22 players, no missing rushers): Phase 1E on StatsBomb.
+
+Script: `scratch/phase1c_leak.py` (`--with-count` for the leaky GBM).
