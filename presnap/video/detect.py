@@ -11,14 +11,14 @@ def tiles(h, w, tile=640, overlap=160):
     return sorted({(y, x) for y in ys for x in xs})
 
 
-def detect(model, img, imgsz=1280, conf=0.15, classes=(0,), tile=640, overlap=160):
+def detect(model, img, imgsz=1280, conf=0.15, classes=(0,), tile=640, overlap=160, batch=2):
     """-> boxes [N,4] xyxy in frame pixels, scores [N]"""
     boxes, scores = [], []
     h, w = img.shape[:2]
     crops = [(y, x, img[y:y + tile, x:x + tile]) for y, x in tiles(h, w, tile, overlap)]
-    for i in range(0, len(crops), 8):
-        batch = crops[i:i + 8]
-        for (y, x, _), r in zip(batch, model.predict([c for _, _, c in batch], imgsz=imgsz, conf=conf,
+    for i in range(0, len(crops), batch):
+        chunk = crops[i:i + batch]
+        for (y, x, _), r in zip(chunk, model.predict([c for _, _, c in chunk], imgsz=imgsz, conf=conf,
                                                      classes=list(classes) if classes else None, verbose=False)):
             boxes.append(r.boxes.xyxy.cpu().numpy() + [x, y, x, y])
             scores.append(r.boxes.conf.cpu().numpy())
