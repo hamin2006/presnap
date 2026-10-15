@@ -26,7 +26,7 @@ def white_lines(img):
     field = cv2.morphologyEx(green, cv2.MORPH_CLOSE, np.ones((25, 25), np.uint8))
     white = cv2.inRange(hsv, (0, 0, 170), (180, 60, 255)) & field
     segs = cv2.HoughLinesP(white, 1, np.pi / 360, threshold=80, minLineLength=80, maxLineGap=15)
-    return white, (segs[:, 0] if segs is not None else np.zeros((0, 4)))
+    return white, (segs.reshape(-1, 4) if segs is not None else np.zeros((0, 4)))
 
 
 def fit_line(pts):
