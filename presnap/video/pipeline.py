@@ -244,6 +244,7 @@ def main():
     ap.add_argument("--detector", default="yolo11x.pt")
     ap.add_argument("--plays", type=int, default=None)
     ap.add_argument("--models", default="sb_ft")
+    ap.add_argument("--ngs-only", action="store_true", help="skip video; check the NGS path alone")
     a = ap.parse_args()
     plays, held_out = eval_plays()
     if a.plays:
@@ -277,6 +278,8 @@ def main():
             for h in ("cov", "man", "shell"):
                 rec[f"ngs_{h}_{c}"] = int(pn[h][c - T_MIN].argmax())
         ngs0 = s0.select("x_position", "y_position").to_numpy()
+        if a.ngs_only:
+            rec["ngs_probs_man0"] = float(pn["man"][-T_MIN][1]); out.append(rec); continue
         orient = choose_orient(det, p, los, ngs0)
         res = video_play(det, p, los, orient) if orient else None
         if res is None:
@@ -300,6 +303,12 @@ def main():
         print(i, p["game_play"], {k: v for k, v in rec.items() if k in ("snap_pos_err", "snap_recall_2yd", "video_dir_correct")}, flush=True)
 
     df = pl.DataFrame(out, infer_schema_length=None)
+    if a.ngs_only:
+        for c in (-10, 0, 10, 20):
+            print(c, {h: round(float((df.filter(pl.col(y) >= 0)[f"ngs_{h}_{c}"] == df.filter(pl.col(y) >= 0)[y]).mean()), 3)
+                      for h, y in (("man", "y_man"), ("cov", "y_cov"), ("shell", "y_shell"))}, "n", df.height)
+        print(df.select("coverage", "y_man", "ngs_man_0", "ngs_cov_0", "ngs_probs_man0").head(12))
+        return
     df.write_parquet(io.INTERIM / "video/pipeline_results.parquet")
     summ = {"plays": df.height, "video_ok": int(df["video_ok"].fill_null(False).sum()),
             "direction_correct": float(df["video_dir_correct"].fill_null(False).mean()),
