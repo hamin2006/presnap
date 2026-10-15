@@ -106,7 +106,7 @@ def main():
         b = svg(p.filter(pl.col("frame") == post).to_dicts())
         rid = r["review_id"]
         radios = lambda f: "".join(f'<label><input type="radio" name="{rid}|{f}" value="{v}"> {v}</label>' for v in ("0-high", "1-high", "2-high", "unsure"))
-        cards.append(f'<section class="card"><h2>{rid}</h2><p class="muted">{r["down"]} & {r["ydstogo"]} · {r["offense_formation"] or ""} {r["receiver_alignment"] or ""}</p>'
+        cards.append(f'<section class="card"><h2>{rid}</h2><p class="muted">{int(r["down"])} & {int(r["ydstogo"])} · {r["offense_formation"] or ""} {r["receiver_alignment"] or ""}</p>'
                      f'<div class="pair"><figure><figcaption>At the snap</figcaption>{a}</figure><figure><figcaption>+{post / 10:.1f} s</figcaption>{b}</figure></div>'
                      f'<fieldset><legend>Shell at the snap</legend>{radios("snap")}</fieldset>'
                      f'<fieldset><legend>Shell at +{post / 10:.1f} s</legend>{radios("post")}</fieldset>'
