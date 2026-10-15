@@ -7,7 +7,7 @@ Pre-snap reads from NFL tracking data: the safety shell at the snap, man vs zone
 
 ## Status
 
-**Phase 0 (foundation): done.** **Phase 1A (shell rule): built; human review deferred** ([reports/phase1a_checks.json](reports/phase1a_checks.json)). Unified coordinate frame, label harmonization, frozen splits, tests, and a v0 opponent report built from charting data ([reports/](reports/)).
+**Phase 0 (foundation): done.** **Phase 1A (shell rule): built; human review deferred** · **Phase 1B (baselines): done** ([scorecard](reports/phase1b_scorecard.md)) · ([reports/phase1a_checks.json](reports/phase1a_checks.json)). Unified coordinate frame, label harmonization, frozen splits, tests, and a v0 opponent report built from charting data ([reports/](reports/)).
 
 ## Setup
 
