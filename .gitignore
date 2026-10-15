@@ -4,3 +4,4 @@ __pycache__/
 .pytest_cache/
 scratch/audit/cache/
 .DS_Store
+logs/
