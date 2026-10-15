@@ -80,3 +80,25 @@ def test_statsbomb_is_10hz_with_presnap():
     t = pl.scan_parquet(P / "tracking.parquet").filter(source="statsbomb").select("frame").collect()
     assert t["frame"].min() < -10  # pre-snap frames survive resampling
     assert t.filter(pl.col("frame") <= 0).height > 0.3 * t.height
+
+
+def test_report_tables_are_well_formed():
+    r = io.ROOT / "reports/phi_2025_defense_v0.md"
+    if not r.exists():
+        pytest.skip("run presnap.report_v0 first")
+    lines = r.read_text().splitlines()
+    for i, line in enumerate(lines):
+        if line.startswith("|---"):
+            n = lines[i - 1].count("|")
+            assert line.count("|") == n, lines[i - 1]
+            j = i + 1
+            while j < len(lines) and lines[j].startswith("|"):
+                assert lines[j].count("|") == n, lines[j]
+                j += 1
+
+
+def test_shrinkage_pulls_small_samples_to_prior():
+    from presnap.report_v0 import shrink, K
+    assert shrink(0, 0, 0.3) == 0.3
+    assert shrink(5, 5, 0.3) == pytest.approx((5 + K * 0.3) / (5 + K))
+    assert abs(shrink(500, 1000, 0.3) - 0.5) < 0.01
