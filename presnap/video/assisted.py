@@ -145,6 +145,7 @@ def main():
         if orc is None or orc[0] < 6:
             rec["fail"] = "simulate"; out.append(rec); continue
         _, H_or, orient = orc
+        H_or, _ = R.refine(H_or, img0)  # best estimate of the true registration, used only to place the clicks
         clicks = project(H_or, ngs0) + rng.normal(0, 2, (len(ngs0), 2)).astype(np.float32)
         H0 = R.pick_at_snap(lines, clicks, los, *orient)   # deployable: the clicks anchor the labeling
         if H0 is None:

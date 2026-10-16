@@ -127,11 +127,13 @@ def to_field(H, pts_img):
 
 
 def pick_at_snap(lines, feet, los_x, direction, y_far):
-    """Choose the labeling that puts the most detected feet within 1.5 yd of the LOS and on the field."""
-    best, best_n = None, -1
+    """Choose the labeling that puts the most players on the LOS; ties (e.g. a wrong sideline pair that keeps x right)
+    are broken by how many players land inside the field at all."""
+    best, best_n = None, -1.0
     for f, H in candidates(lines, direction, y_far):
         p = to_field(H, feet)
-        n = int(((np.abs(p[:, 0] - los_x) < 1.5) & (p[:, 1] > 0) & (p[:, 1] < W)).sum())
+        inside = (p[:, 1] > -1) & (p[:, 1] < W + 1) & (p[:, 0] > 0) & (p[:, 0] < 120)
+        n = float(((np.abs(p[:, 0] - los_x) < 1.5) & inside).sum() + 0.5 * inside.sum())
         if n > best_n:
             best, best_n = H, n
     return best
