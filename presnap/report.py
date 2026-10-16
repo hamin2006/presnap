@@ -104,10 +104,16 @@ def main(team="PHI"):
     sections.append("<h2>How readable are they?</h2>")
     sections.append(f"<p>Our model, which never saw these plays in training, names the coverage family correctly <b>{pct(base['read_snap'])}</b> of the time at the snap "
                     f"(league {pct(lg['read_snap'])}) and <b>{pct(base['read_1s'])}</b> one second later (league {pct(lg['read_1s'])}). "
-                    f"Ranked <b>{rank} of {teams.height}</b> from hardest to read at the snap. The gap is what they hide until after the snap.</p>")
+                    f"Ranked <b>{rank} of {teams.height}</b> on readability at the snap (1 = hardest to read). The gap is what they hide until after the snap.</p>")
 
     t = me.drop_nulls("shell_snap").group_by("shell_snap").agg([pl.len().alias("n")] + [(pl.col("family") == f).mean().alias(f) for f in FAMS]).sort("shell_snap")
     sections.append("<h2>What they show vs. what they play</h2><p class=\"muted\">Rows: the look at the snap (safety shell, rule-based). Columns: coverage actually played.</p>")
+    two = t.filter(pl.col("shell_snap") == 2)
+    if two.height:
+        r2 = two.row(0, named=True)
+        sections.append(f'<p><b>Key read:</b> when they show two-high at the snap ({r2["n"]} plays), it ends up single-high '
+                        f'(Cover 1 or Cover 3) <b>{pct(r2["C1"] + r2["C3"])}</b> of the time and stays two-high (Cover 2, Quarters or 2-Man) '
+                        f'{pct(r2["C2"] + r2["QTR"] + r2["C2M"])}.</p>')
     sections.append(table(["Look at the snap", "Plays"] + [FAM_NAMES[f] for f in FAMS],
                           [[SHELL[r["shell_snap"]], r["n"]] + [bar(r[f]) for f in FAMS] for r in t.iter_rows(named=True)]))
 
