@@ -88,8 +88,8 @@ def main(limit=None):
             truth = truth_df.select("x_position", "y_position").to_numpy()
             rec = dict(game_play=gp, step=s, eval=gp in eval_plays, registered=False)
             lines = R.detect_lines(img) if ok else None
-            if lines is None or not len(truth):
-                rows.append(rec); continue
+            if lines is None or not len(truth) or (H is None and s not in DET_STEPS):
+                rows.append(rec); continue  # labeling is only attempted on detection frames (caps GPU time per play)
             if s in DET_STEPS or H is None:
                 boxes, _ = Dt.detect(det_model, img, conf=0.08)  # low threshold: NGS filters the false positives
             else:
