@@ -120,6 +120,37 @@ def candidates(det, direction, y_far):
                 yield f, H
 
 
+def relabel(lines, H):
+    """Label every detected line from a nearby homography (previous frame, or a first guess) and refit.
+    Yard lines snap to the nearest painted line (5-yd grid plus end lines); the sideline pair is the two flat lines
+    that map closest to the border centres. No assumption that detected lines are contiguous."""
+    yard, flat, h, w = lines
+    rows = np.array([[0.0, 1.0, -0.3 * h], [0.0, 1.0, -0.7 * h]])
+    labeled = []
+    for l in yard:
+        pts = np.array([_cross(l, r) for r in rows])
+        fx = to_field(H, pts)[:, 0].mean()
+        k = int(np.argmin(np.abs(YARD_LINES - fx)))
+        if abs(YARD_LINES[k] - fx) < 2.0:
+            labeled.append((YARD_LINES[k], l))
+    if len(labeled) < 2:
+        return None
+    mid = np.array([1.0, 0.0, -w / 2])
+    fy = [to_field(H, _cross(l, mid)[None])[0, 1] for l in flat]
+    far_i = int(np.argmin([min(abs(y + BORDER), abs(y - W - BORDER)) for y in fy]))
+    far_y = -BORDER if abs(fy[far_i] + BORDER) < abs(fy[far_i] - W - BORDER) else W + BORDER
+    near_y = W + BORDER if far_y < 0 else -BORDER
+    near_i = int(np.argmin([abs(y - near_y) if i != far_i else np.inf for i, y in enumerate(fy)]))
+    if abs(fy[far_i] - far_y) > 3 or abs(fy[near_i] - near_y) > 3:
+        return None
+    src, dst = [], []
+    for x, l in labeled:
+        for s_, y in ((flat[far_i], far_y), (flat[near_i], near_y)):
+            src.append((x, y)); dst.append(_cross(l, s_))
+    Hn, _ = cv2.findHomography(np.array(src, np.float32), np.array(dst, np.float32), cv2.RANSAC, 6.0)
+    return Hn
+
+
 def to_field(H, pts_img):
     if len(pts_img) == 0:
         return np.zeros((0, 2))
@@ -136,19 +167,15 @@ def pick_at_snap(lines, feet, los_x, direction, y_far):
         n = float(((np.abs(p[:, 0] - los_x) < 1.5) & inside).sum() + 0.5 * inside.sum())
         if n > best_n:
             best, best_n = H, n
+    if best is not None:  # contiguous labeling breaks when a middle line is missed: relabel from the choice and refit
+        Hr = relabel(lines, best)
+        best = Hr if Hr is not None else best
     return best
 
 
 def pick_consistent(lines, prev_H, direction, y_far, h, w):
-    """Choose the labeling whose mapping of a grid of image points is closest to the previous frame's."""
-    grid = np.array([(x, y) for x in np.linspace(0.2 * w, 0.8 * w, 5) for y in np.linspace(0.35 * h, 0.75 * h, 3)])
-    ref = to_field(prev_H, grid)
-    best, best_d = None, np.inf
-    for _, H in candidates(lines, direction, y_far):
-        d = np.median(np.linalg.norm(to_field(H, grid) - ref, axis=1))
-        if d < best_d:
-            best, best_d = H, d
-    return best
+    """Next frame: label lines from the previous frame's homography (camera moves << 2.5 yd per frame)."""
+    return relabel(lines, prev_H)
 
 
 def model_points(step=0.5):
