@@ -72,37 +72,52 @@ def _cross(l1, l2):
 
 
 def detect_lines(img):
-    """-> (yard lines sorted left to right along the near sideline, far sideline, near sideline) or None."""
+    """-> (yard lines sorted left to right, flat lines sorted top to bottom, image height, width) or None.
+    Which flat lines are the sidelines is decided later: stands railings and coaching-box lines are flat too."""
     h = img.shape[0]
     segs = _lines(img)
     yard, flat = _group(segs, True, h), _group(segs, False, h)
     if len(yard) < 2 or len(flat) < 2:
         return None
-    far, near = flat[0], flat[-1]
-    yard.sort(key=lambda l: _cross(l, near)[0])
-    return yard, far, near
+    mid = np.array([0.0, 1.0, -img.shape[1] / 2])  # the vertical line x = w/2
+    flat.sort(key=lambda l: _cross(l, mid)[1])
+    yard.sort(key=lambda l: _cross(l, flat[-1])[0])
+    return yard, flat, h, img.shape[1]
+
+
+def _pairs(det):
+    """(far, near) sideline candidates: any two flat lines at least a quarter of the frame apart."""
+    _, flat, h, w = det
+    mid = np.array([0.0, 1.0, -w / 2])
+    ys = [_cross(l, mid)[1] for l in flat]
+    for i in range(len(flat)):
+        for j in range(i + 1, len(flat)):
+            if ys[j] - ys[i] > 0.25 * h:
+                yield flat[i], flat[j]
 
 
 def homography(lines, first_idx, direction, y_far):
     """Field->image homography for one labeling: yard line i gets YARD_LINES[first_idx + direction * i]."""
     yard, far, near = lines
-    xs = YARD_LINES[first_idx + direction * np.arange(len(yard))] if direction > 0 else YARD_LINES[first_idx - np.arange(len(yard))]
+    xs = YARD_LINES[first_idx + direction * np.arange(len(yard))]
+    yf, yn = (-BORDER, W + BORDER) if y_far == 0 else (W + BORDER, -BORDER)
     src, dst = [], []
     for x, l in zip(xs, yard):
-        yf = -BORDER if y_far == 0 else W + BORDER
-        for s, y in ((far, yf), (near, W + BORDER if y_far == 0 else -BORDER)):
+        for s, y in ((far, yf), (near, yn)):
             src.append((x, y)); dst.append(_cross(l, s))
     H, _ = cv2.findHomography(np.array(src, np.float32), np.array(dst, np.float32), cv2.RANSAC, 6.0)
     return H
 
 
-def candidates(lines, direction, y_far):
-    n = len(lines[0])
+def candidates(det, direction, y_far):
+    yard = det[0]
+    n = len(yard)
     firsts = range(0, len(YARD_LINES) - n + 1) if direction > 0 else range(n - 1, len(YARD_LINES))
-    for f in firsts:
-        H = homography(lines, f, direction, y_far)
-        if H is not None:
-            yield f, H
+    for far, near in _pairs(det):
+        for f in firsts:
+            H = homography((yard, far, near), f, direction, y_far)
+            if H is not None:
+                yield f, H
 
 
 def to_field(H, pts_img):
