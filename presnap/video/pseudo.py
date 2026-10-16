@@ -91,7 +91,7 @@ def main(limit=None):
             if lines is None or not len(truth):
                 rows.append(rec); continue
             if s in DET_STEPS or H is None:
-                boxes, _ = Dt.detect(det_model, img)
+                boxes, _ = Dt.detect(det_model, img, conf=0.08)  # low threshold: NGS filters the false positives
             else:
                 boxes = np.zeros((0, 4))
             fpx = Dt.feet(boxes) if len(boxes) else np.zeros((0, 2))
@@ -120,19 +120,26 @@ def main(limit=None):
                        median_err=float(np.median(err)) if len(err) else None,
                        within_1yd=float((err <= 1).sum() / len(truth)), within_05yd=float((err <= 0.5).sum() / len(truth)))
             rows.append(rec)
-            if gp not in eval_plays and len(ratio) >= 10:  # pseudo-labelled tiles for detector training
-                hpx = np.median(ratio) * ppy
-                fx = project(H, truth)
-                bxs = np.c_[fx[:, 0] - 0.22 * hpx, fx[:, 1] - hpx, fx[:, 0] + 0.22 * hpx, fx[:, 1]]
+            if gp not in eval_plays and s in DET_STEPS and len(m):
+                # labels = the detector's own (pixel-accurate) boxes that NGS confirms as players within 1 yd;
+                # NGS players the detector missed are greyed out so they aren't taught as background
+                conf = m[np.linalg.norm(pf[m[:, 1]] - truth[m[:, 0]], axis=1) <= 1.0]
+                pos = boxes[conf[:, 1]]
+                missed = np.setdiff1d(np.arange(len(truth)), conf[:, 0])
+                hpx = (np.median(ratio) if ratio else 2.0) * ppy[missed]
+                fx = project(H, truth[missed])
+                img_l = img.copy()
+                for (x, y), hh in zip(fx, hpx):
+                    cv2.rectangle(img_l, (int(x - .35 * hh), int(y - 1.15 * hh)), (int(x + .35 * hh), int(y + .15 * hh)), (110, 110, 110), -1)
                 for (ty, tx) in Dt.tiles(*img.shape[:2]):
-                    inside = (bxs[:, 2] > tx) & (bxs[:, 0] < tx + 640) & (bxs[:, 3] > ty) & (bxs[:, 1] < ty + 640)
+                    inside = (pos[:, 2] > tx) & (pos[:, 0] < tx + 640) & (pos[:, 3] > ty) & (pos[:, 1] < ty + 640)
                     if not inside.any():
                         continue
-                    b = bxs[inside] - [tx, ty, tx, ty]
+                    b = pos[inside] - [tx, ty, tx, ty]
                     cl = np.clip(b, 0, 640)
                     keep = (cl[:, 2] - cl[:, 0]) * (cl[:, 3] - cl[:, 1]) >= 0.5 * (b[:, 2] - b[:, 0]) * (b[:, 3] - b[:, 1])
                     name = f"{gp}_s{s:+d}_{ty}_{tx}"
-                    cv2.imwrite(str(OUT / f"tiles/images/{name}.jpg"), img[ty:ty + 640, tx:tx + 640], [cv2.IMWRITE_JPEG_QUALITY, 92])
+                    cv2.imwrite(str(OUT / f"tiles/images/{name}.jpg"), img_l[ty:ty + 640, tx:tx + 640], [cv2.IMWRITE_JPEG_QUALITY, 92])
                     with open(OUT / f"tiles/labels/{name}.txt", "w") as f:
                         for x1, y1, x2, y2 in cl[keep]:
                             f.write(f"0 {(x1 + x2) / 1280:.5f} {(y1 + y2) / 1280:.5f} {(x2 - x1) / 640:.5f} {(y2 - y1) / 640:.5f}\n")
