@@ -24,11 +24,12 @@ for gp in bad[::8]:
     f = Dt.feet(b) if len(b) else np.zeros((0, 2))
     truth = trk.filter(pl.col("game_play") == gp).select("x_position", "y_position").to_numpy()
     best = oracle_snap(lines, f, truth) if lines else None
-    print(gp, "dets", len(f), "yard", len(lines[0]) if lines else 0, "best matches", best[0] if best else None)
+    print(gp, "dets", len(f), "yard", len(lines[0]) if lines else 0, "flat", len(lines[1]) if lines else 0,
+          "pairs", len(list(R._pairs(lines))) if lines else 0, "best matches", best[0] if best else None)
     vis = img.copy()
     if lines:
-        yard, far, near = lines
-        for l, col in [(l, (0, 255, 0)) for l in yard] + [(far, (0, 0, 255)), (near, (255, 0, 0))]:
+        yard, flat, _, _ = lines
+        for l, col in [(l, (0, 255, 0)) for l in yard] + [(l, (0, 0, 255)) for l in flat]:
             a, bb, c = l
             pts = [(int(x), int(-(a * x + c) / bb)) for x in (0, 1919)] if abs(bb) > abs(a) else [(int(-(bb * y + c) / a), int(y)) for y in (0, 1079)]
             cv2.line(vis, pts[0], pts[1], col, 2)
