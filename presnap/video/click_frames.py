@@ -1,4 +1,4 @@
-"""Extract snap frames for the click tool (20 held-out, labelled All29 plays) -> data/review/click/frames/."""
+"""Extract snap frames for the click tool (20 labelled All29 plays) -> data/review/click/frames/."""
 import json
 
 import cv2
@@ -13,7 +13,7 @@ OUT = io.ROOT / "data/review/click"
 
 def main(n=20):
     plays, held = eval_plays()
-    plays = plays.filter(pl.col("game_play").is_in(list(held))).sample(min(n, plays.height), seed=7, shuffle=True)
+    plays = plays.sample(n, seed=7, shuffle=True)  # any labelled play: the detector split no longer matters
     (OUT / "frames").mkdir(parents=True, exist_ok=True)
     ids = []
     for p in plays.iter_rows(named=True):
