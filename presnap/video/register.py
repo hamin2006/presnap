@@ -79,7 +79,7 @@ def detect_lines(img):
     yard, flat = _group(segs, True, h), _group(segs, False, h)
     if len(yard) < 2 or len(flat) < 2:
         return None
-    mid = np.array([0.0, 1.0, -img.shape[1] / 2])  # the vertical line x = w/2
+    mid = np.array([1.0, 0.0, -img.shape[1] / 2])  # the vertical line x = w/2
     flat.sort(key=lambda l: _cross(l, mid)[1])
     yard.sort(key=lambda l: _cross(l, flat[-1])[0])
     return yard, flat, h, img.shape[1]
@@ -88,7 +88,7 @@ def detect_lines(img):
 def _pairs(det):
     """(far, near) sideline candidates: any two flat lines at least a quarter of the frame apart."""
     _, flat, h, w = det
-    mid = np.array([0.0, 1.0, -w / 2])
+    mid = np.array([1.0, 0.0, -w / 2])  # the vertical line x = w/2
     ys = [_cross(l, mid)[1] for l in flat]
     for i in range(len(flat)):
         for j in range(i + 1, len(flat)):
