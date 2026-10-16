@@ -15,8 +15,15 @@ BORDER = 1.0  # the detected "sideline" is the middle of the 2-yd white border o
 
 
 def white_mask(img):
+    """White paint on the playing surface. The turf hue is estimated per frame (grass ~35-60, Atlanta's grey-teal
+    turf ~93 on OpenCV's 0-180 scale), so any field colour works."""
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-    field = cv2.morphologyEx(cv2.inRange(hsv, (30, 40, 40), (90, 255, 255)), cv2.MORPH_CLOSE, np.ones((25, 25), np.uint8))
+    h, w = hsv.shape[:2]
+    core = hsv[int(.4 * h):int(.8 * h), int(.2 * w):int(.8 * w)].reshape(-1, 3)
+    core = core[core[:, 1] > 30]
+    h0 = float(np.median(core[:, 0])) if len(core) else 45.0
+    lo, hi = max(h0 - 20, 0), min(h0 + 20, 180)
+    field = cv2.morphologyEx(cv2.inRange(hsv, (lo, 25, 40), (hi, 255, 255)), cv2.MORPH_CLOSE, np.ones((25, 25), np.uint8))
     return cv2.inRange(hsv, (0, 0, 170), (180, 60, 255)) & field
 
 
