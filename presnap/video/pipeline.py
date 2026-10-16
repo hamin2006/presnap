@@ -243,14 +243,15 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--detector", default="yolo11x.pt")
     ap.add_argument("--plays", type=int, default=None)
-    ap.add_argument("--models", default="sb_ft")
+    ap.add_argument("--models", default="sb_ft,sb_ft_robust", help="comma-separated run tags, all scored in one video pass")
     ap.add_argument("--ngs-only", action="store_true", help="skip video; check the NGS path alone")
     a = ap.parse_args()
     plays, held_out = eval_plays()
     if a.plays:
         plays = plays.head(a.plays)
     S_all = seq.situation(plays)
-    models = load_models(a.models, n_sit=S_all.shape[1])
+    tags = a.models.split(",")
+    models = {tag: load_models(tag, n_sit=S_all.shape[1]) for tag in tags}
     det = YOLO(a.detector)
     trk = pl.read_csv(V / "train_player_tracking.csv").filter(pl.col("step").is_between(T_MIN, T_MAX))
     out = []
@@ -270,16 +271,17 @@ def main():
             side = "off" if (g["team"][0] == "home") == offense_home else "def"
             ngs_players.append((g["position"][0], side, {s: (x, y) for s, x, y in g.select("step", "x_position", "y_position").iter_rows()}))
         Xn, Mn = to_tensors(ngs_players, los, true_dir)
-        pn = predict(models, Xn, Mn, S_all[i:i + 1])
+        pn = {tag: predict(ms, Xn, Mn, S_all[i:i + 1]) for tag, ms in models.items()}
         rec = dict(game_play=p["game_play"], held_out=p["game_play"] in held_out, coverage=p["coverage"],
                    y_cov=labels.COVERAGE7.index(p["coverage"]) if p["coverage"] in labels.COVERAGE7 else -1,
                    y_man=int(p["man_zone"] == "MAN"), y_shell=p["shell_played"])
-        for c in (-10, 0, 10, 20):
-            for h in ("cov", "man", "shell"):
-                rec[f"ngs_{h}_{c}"] = int(pn[h][c - T_MIN].argmax())
+        for tag in tags:
+            for c in (-10, 0, 10, 20):
+                for h in ("cov", "man", "shell"):
+                    rec[f"ngs_{tag}_{h}_{c}"] = int(pn[tag][h][c - T_MIN].argmax())
         ngs0 = s0.select("x_position", "y_position").to_numpy()
         if a.ngs_only:
-            rec["ngs_probs_man0"] = float(pn["man"][-T_MIN][1]); out.append(rec); continue
+            out.append(rec); continue
         orient = choose_orient(det, p, los, ngs0)
         res = video_play(det, p, los, orient) if orient else None
         if res is None:
@@ -291,36 +293,36 @@ def main():
         sd = np.array([s_ for s_, _ in trajs], dtype=object)
         roles = infer_roles(xr, yr, sd)
         Xv, Mv = to_tensors([(r, s_, tr) for r, (s_, tr) in zip(roles, trajs)], los, vdir)
-        pv = predict(models, Xv, Mv, S_all[i:i + 1])
+        pv = {tag: predict(ms, Xv, Mv, S_all[i:i + 1]) for tag, ms in models.items()}
         mm = match(pos0, ngs0, 2.0)
         rec.update(video_ok=True, video_dir_correct=vdir == true_dir, n_video_players=int((sd != None).sum()),
                    snap_pos_err=float(np.median(np.linalg.norm(pos0[mm[:, 1]] - ngs0[mm[:, 0]], axis=1))) if len(mm) else None,
                    snap_recall_2yd=len(mm) / len(ngs0))
-        for c in (-10, 0, 10, 20):
-            for h in ("cov", "man", "shell"):
-                rec[f"video_{h}_{c}"] = int(pv[h][c - T_MIN].argmax())
+        for tag in tags:
+            for c in (-10, 0, 10, 20):
+                for h in ("cov", "man", "shell"):
+                    rec[f"video_{tag}_{h}_{c}"] = int(pv[tag][h][c - T_MIN].argmax())
         out.append(rec)
         print(i, p["game_play"], {k: v for k, v in rec.items() if k in ("snap_pos_err", "snap_recall_2yd", "video_dir_correct")}, flush=True)
 
     df = pl.DataFrame(out, infer_schema_length=None)
-    if a.ngs_only:
-        for c in (-10, 0, 10, 20):
-            print(c, {h: round(float((df.filter(pl.col(y) >= 0)[f"ngs_{h}_{c}"] == df.filter(pl.col(y) >= 0)[y]).mean()), 3)
-                      for h, y in (("man", "y_man"), ("cov", "y_cov"), ("shell", "y_shell"))}, "n", df.height)
-        print(df.select("coverage", "y_man", "ngs_man_0", "ngs_cov_0", "ngs_probs_man0").head(12))
-        return
     df.write_parquet(io.INTERIM / "video/pipeline_results.parquet")
-    summ = {"plays": df.height, "video_ok": int(df["video_ok"].fill_null(False).sum()),
-            "direction_correct": float(df["video_dir_correct"].fill_null(False).mean()),
-            "snap_pos_err_median": float(df["snap_pos_err"].median()), "snap_recall_2yd": float(df["snap_recall_2yd"].mean())}
-    ok = df.filter(pl.col("video_ok").fill_null(False))
-    for c in (-10, 0, 10, 20):
-        for h, y in (("man", "y_man"), ("cov", "y_cov"), ("shell", "y_shell")):
-            sub = ok.filter(pl.col(y) >= 0)
-            summ[f"{h}@{c / 10:+.1f}s"] = dict(ngs=round(float((sub[f"ngs_{h}_{c}"] == sub[y]).mean()), 3),
-                                               video=round(float((sub[f"video_{h}_{c}"] == sub[y]).mean()), 3),
-                                               agree=round(float((sub[f"ngs_{h}_{c}"] == sub[f"video_{h}_{c}"]).mean()), 3), n=sub.height)
-    (io.ROOT / f"reports/phase2d_pipeline_{a.models}.json").write_text(json.dumps(summ, indent=2))
+    ok = df if a.ngs_only else df.filter(pl.col("video_ok").fill_null(False))
+    summ = {"plays": df.height, "video_ok": ok.height}
+    if not a.ngs_only:
+        summ.update(direction_correct=float(ok["video_dir_correct"].mean()), snap_pos_err_median=float(ok["snap_pos_err"].median()),
+                    snap_recall_2yd=float(ok["snap_recall_2yd"].mean()), video_players_median=float(ok["n_video_players"].median()))
+    for tag in tags:
+        for c in (-10, 0, 10, 20):
+            for h, y in (("man", "y_man"), ("cov", "y_cov"), ("shell", "y_shell")):
+                sub = ok.filter(pl.col(y) >= 0)
+                r = dict(ngs=round(float((sub[f"ngs_{tag}_{h}_{c}"] == sub[y]).mean()), 3), n=sub.height)
+                if not a.ngs_only:
+                    r.update(video=round(float((sub[f"video_{tag}_{h}_{c}"] == sub[y]).mean()), 3),
+                             agree=round(float((sub[f"ngs_{tag}_{h}_{c}"] == sub[f"video_{tag}_{h}_{c}"]).mean()), 3))
+                summ[f"{tag} {h}@{c / 10:+.1f}s"] = r
+    name = "ngs_only" if a.ngs_only else "video"
+    (io.ROOT / f"reports/phase2d_pipeline_{name}.json").write_text(json.dumps(summ, indent=2))
     print(json.dumps(summ, indent=2))
 
 
