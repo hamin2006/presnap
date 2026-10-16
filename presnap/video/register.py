@@ -24,7 +24,11 @@ def white_mask(img):
     h0 = float(np.median(core[:, 0])) if len(core) else 45.0
     lo, hi = max(h0 - 20, 0), min(h0 + 20, 180)
     field = cv2.morphologyEx(cv2.inRange(hsv, (lo, 25, 40), (hi, 255, 255)), cv2.MORPH_CLOSE, np.ones((25, 25), np.uint8))
-    return cv2.inRange(hsv, (0, 0, 170), (180, 60, 255)) & field
+    # paint = clearly brighter than its immediate surroundings (top-hat), so low-contrast lines on bright turf count too
+    v = hsv[..., 2]
+    tophat = cv2.morphologyEx(v, cv2.MORPH_TOPHAT, cv2.getStructuringElement(cv2.MORPH_RECT, (9, 9)))
+    paint = ((tophat > 18) & (hsv[..., 1] < np.median(core[:, 1]) if len(core) else tophat > 18)).astype(np.uint8) * 255
+    return paint & field
 
 
 def _lines(img):
