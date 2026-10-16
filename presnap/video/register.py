@@ -10,7 +10,7 @@ import cv2
 import numpy as np
 
 W = 53.3
-YARD_LINES = np.arange(10, 111, 5)
+YARD_LINES = np.r_[0, np.arange(10, 111, 5), 120]  # end lines too: they show whenever an end zone is in view
 BORDER = 1.0  # the detected "sideline" is the middle of the 2-yd white border outside the field: y = -1 / 54.3
 
 
@@ -125,8 +125,8 @@ def pick_consistent(lines, prev_H, direction, y_far, h, w):
 
 def model_points(step=0.5):
     """Points on the painted lines we can see: yard lines and the middle of each sideline border."""
-    pts = [(x, y) for x in YARD_LINES for y in np.arange(0, W + 1e-6, step)]
-    pts += [(x, y) for x in np.arange(10, 110 + 1e-6, step) for y in (-BORDER, W + BORDER)]
+    pts = [(x, y) for x in YARD_LINES for y in np.arange(0, W + 1e-6, step)]  # includes the end lines
+    pts += [(x, y) for x in np.arange(0, 120 + 1e-6, step) for y in (-BORDER, W + BORDER)]
     return np.array(pts, np.float32)
 
 
